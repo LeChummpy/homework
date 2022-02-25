@@ -2,9 +2,14 @@ from turtle import *
 
 class VerbindungVisualisierung:
 
-    def __init__(self,x,y,radius,farbe):
-        self.__x = x
-        self.__y = y
+    def __init__(self,x1,y1,x2,y2,farbe):
+        self.__x1 = x1
+        self.__y1 = y1
+        self.__x2 = x2
+        self.__y2 = y2
+        dx = x1 - x2
+        dy = y1 - y2
+
         self.__leuchtet = False
         self.__radius = radius
         self.__farbe = farbe
@@ -12,11 +17,12 @@ class VerbindungVisualisierung:
         self.__bild.speed(0)
         self.__bild.hideturtle ()
         self.__bild.penup ()
-        self.__bild.goto(x,y)
-        self.__bild.shape("circle")
-        self.__bild.shapesize(radius/10)
-        self.__bild.fillcolor("black")
-        self.__bild.showturtle()
+        self.__bild.goto(x1,y1)
+        self.__bild.pendown ()
+        self.__bild.fillcolor(farbe)
+        self.__bild.width(10)
+        self.__bild.forward(dx)
+        self.__bild.forward(dy)
 
     def anschalten (self):
         self.__bild.fillcolor(self.__farbe)
