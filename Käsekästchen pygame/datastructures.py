@@ -1,42 +1,72 @@
-class Stapel:
+class Schlange:
     class __Knoten:
-        def __init__(self, k):
-            self.inhalt = k
-            self.vorheriger = None
+        def __init__(self, e):
+            self.element = e
+            self.naechster = None
 
     def __init__(self):
         self.__laenge = 0
-        self.__oberster = None
-
-    def IstLeer(self):
-        return self.__laenge==0
-
-    def Draufpacken(self, k):
-        n = self.__Knoten(k)
-        if (self.__laenge==0):
-            self.__oberster = n
-        else:
-            n.vorheriger = self.__oberster
-            self.__oberster = n
-        self.__laenge += 1
-
-    def Bedienen(self):
-        self.__oberster = self.__oberster.vorheriger
-        self.__laenge -= 1
-
-    def Oberstes(self):
-        return self.__oberster.inhalt
+        self.__erster = None
 
     def Laenge(self):
         return self.__laenge
 
+    def ElementReturnieren(self, index):
+        x = self.__erster
+        for i in range(index):
+            x = x.naechster
+        return x.element
+
+
+    def einreihen(self, e):
+        e =  self.__Knoten(e)
+        x = self.__erster
+        if x != None:
+            while True:
+                if x.naechster == None:
+                    break
+                x = x.naechster
+            x.naechster = e
+        else:
+            self.__erster = e
+
+        self.__laenge += 1
+
+    def Schlangeverlassen(self):
+        self.__erster = self.__erster.naechster
+        self.__laenge -= 1
+
+    def vorziehen(self, n):
+        '''
+        Vorr.: -n- darf nicht 0 sein und darf die Anzahl der Elemente in der Schlange um 1
+               vermindert nicht überschreiten.
+        Eff.: Das Element der Schlange an -n-ter Stelle ist nun an den Beginn der Schlange vorgezogen.
+        '''
+        x_minus_1 = self.__erster
+        x = self.__erster
+        for i in range(n):
+            x = x.naechster
+        for i in range(n-1):
+            x_minus_1 = x_minus_1.naechster
+
+        x_minus_1.naechster = x.naechster
+        x.naechster = self.__erster
+        self.__erster = x
+
+
     def __str__(self):
-        erg = ""
-        x = self.__oberster
-        while x != None:
-            erg += " ~ " + str(x.inhalt)
-            x = x.vorheriger
-        return ("[" + erg + "]")
+        out = "[ "
+        x = self.__erster
+        if x != None:
+            while True:
+                out += str((x.kfz, x.typ, x.tauglich))
+                if x.naechster != None:
+                    out += ", "
+                if x.naechster == None:
+                    break
+                x = x.naechster
+        out += " ]"
+        return out
 
 
 class Bitboard:
