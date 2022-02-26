@@ -2,12 +2,14 @@ import pygame
 import mainclasses
 import datastructures
 import colors
+from helper import *
 
 pygame.init()
 
 #-----------------------------------------------------------
 #fonts
 prettyfont = pygame.font.SysFont('Arial', 70)
+prettyfontsmaller = pygame.font.SysFont('Arial', 35)
 
 #-----------------------------------------------------------
 
@@ -71,13 +73,6 @@ class ActualGame():
                 pygame.quit()
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
-                def horizontaldervertikalbenachbart(indicesAngeklickteZweiPunkte):
-                    indicesPunkt1 = indicesAngeklickteZweiPunkte[0]
-                    indicesPunkt2 = indicesAngeklickteZweiPunkte[1]
-                    if (indicesPunkt1[0]==indicesPunkt2[0] and (indicesPunkt1[1]+1==indicesPunkt2[1] or indicesPunkt1[1]-1==indicesPunkt2[1])) or ((indicesPunkt1[0]+1==indicesPunkt2[0] or indicesPunkt1[0]-1==indicesPunkt2[0]) and indicesPunkt1[1]==indicesPunkt2[1]):
-                        return True
-                    else:
-                        return False
 
                 Kords = pygame.mouse.get_pos()
                 indices = self.current_Spielbrett.IndicesVonAngeklicktemPunktReturnieren(Kords[0], Kords[1])
@@ -86,18 +81,33 @@ class ActualGame():
 
                 if (len(self.indizes_paar_angeklickter_punkte)==2):
                     if (horizontaldervertikalbenachbart(self.indizes_paar_angeklickter_punkte)):
-                        kordsangeklicktezweipunkte = self.current_Spielbrett.KordsAngeklicktePunkteReturnieren(self.indizes_paar_angeklickter_punkte)
-                        self.current_Spielbrett.VerbindungHinzufuegen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
+                        if not(self.current_Spielbrett.angeklicktePunkteExistierenSchonAlsVerbindung(self.indizes_paar_angeklickter_punkte)):
+                            kordsangeklicktezweipunkte = self.current_Spielbrett.KordsAngeklicktePunkteReturnieren(self.indizes_paar_angeklickter_punkte)
+                            self.current_Spielbrett.VerbindungHinzufuegen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
 
 
-                        if self.am_Zug.ID == self.current_Spieler1.ID:
-                            self.am_Zug = self.current_Spieler2
-                        elif self.am_Zug.ID == self.current_Spieler2.ID:
-                            self.am_Zug = self.current_Spieler1
+
+                            if self.am_Zug.ID == self.current_Spieler1.ID:
+                                self.am_Zug = self.current_Spieler2
+                            elif self.am_Zug.ID == self.current_Spieler2.ID:
+                                self.am_Zug = self.current_Spieler1
 
                     self.indizes_paar_angeklickter_punkte = []
 
         screen.fill(colors.orange)
+
+        text_amzug = None
+        if (self.am_Zug.ID==1):
+            text_amzug = prettyfontsmaller.render("Spieler 1 ist dran!", True, self.am_Zug.verbindungsfarbe)
+        elif (self.am_Zug.ID==2):
+            text_amzug = prettyfontsmaller.render("Spieler 2 ist dran!", True, self.am_Zug.verbindungsfarbe)
+        screen.blit(text_amzug, (600, 200))
+
+        text_Spieler1Punkte = prettyfont.render(str(self.current_Spieler1.Punkte), True, self.current_Spieler1.verbindungsfarbe)
+        text_Spieler2Punkte = prettyfont.render(str(self.current_Spieler2.Punkte), True, self.current_Spieler2.verbindungsfarbe)
+        screen.blit(text_Spieler1Punkte, (640, 75))
+        screen.blit(text_Spieler2Punkte, (740, 75))
+
         self.current_Spielbrett.show(screen)
         pygame.display.update()
 

@@ -40,6 +40,23 @@ class Spielbrett:
         indizes_Punkt2 = indizes_paar[1]
         return (self.punkte.ElementReturnieren(indizes_Punkt1[0], indizes_Punkt1[1]).Koordinaten, self.punkte.ElementReturnieren(indizes_Punkt2[0], indizes_Punkt2[1]).Koordinaten)
 
+    def angeklicktePunkteExistierenSchonAlsVerbindung(self, indizes_paar_angeklickter_punkte):
+        laenge = self.verbindungen.Laenge()
+        for i in range(laenge):
+            verbindung = self.verbindungen.ElementReturnieren(i)
+            indicesPunkt1Verbindung = verbindung.verbundenerPunkt1Indices
+            indicesPunkt2Verbindung = verbindung.verbundenerPunkt2Indices
+            indicesPunkt1Angeklickt = indizes_paar_angeklickter_punkte[0]
+            indicesPunkt2Angeklickt = indizes_paar_angeklickter_punkte[1]
+
+            punkt1gleich1undpunkt2gleich2 = (indicesPunkt1Verbindung[0]==indicesPunkt1Angeklickt[0] and indicesPunkt1Verbindung[1]==indicesPunkt1Angeklickt[1]) and (indicesPunkt2Verbindung[0]==indicesPunkt2Angeklickt[0] and indicesPunkt2Verbindung[1]==indicesPunkt2Angeklickt[1])
+            punkt1gleich2undpunkt2gleich1 = (indicesPunkt1Verbindung[0]==indicesPunkt2Angeklickt[0] and indicesPunkt1Verbindung[1]==indicesPunkt2Angeklickt[1]) and (indicesPunkt2Verbindung[0]==indicesPunkt1Angeklickt[0] and indicesPunkt2Verbindung[1]==indicesPunkt1Angeklickt[1])
+
+            if (punkt1gleich1undpunkt2gleich2 or punkt1gleich2undpunkt2gleich1):
+                return True
+        return False
+
+
     def VerbindungHinzufuegen(self, indicesAngeklickteZweiPunkte, kordsindicesAngeklickteZweiPunkte, spielerID, spielerVerbindungsfarbe):
 
         v = Verbindung(indicesAngeklickteZweiPunkte[0], indicesAngeklickteZweiPunkte[1], kordsindicesAngeklickteZweiPunkte[0], kordsindicesAngeklickteZweiPunkte[1], spielerID, spielerVerbindungsfarbe)
@@ -57,7 +74,35 @@ class Spielbrett:
         Laenge = self.verbindungen.Laenge()
         for i in range(Laenge):
             verbindung = self.verbindungen.ElementReturnieren(i)
-            pygame.draw.rect(screen, verbindung.Farbe, (verbindung.kordsVerbundenerPunkt1[0], verbindung.kordsVerbundenerPunkt1[1], 10, 10), 1)
+            dx = verbindung.kordsVerbundenerPunkt2[0] - verbindung.kordsVerbundenerPunkt1[0]
+            dy = verbindung.kordsVerbundenerPunkt2[1] - verbindung.kordsVerbundenerPunkt1[1]
+
+            drawingkords_x = 0
+            drawingkords_y = 0
+            drawing_width = 10
+            drawing_heigth = 10
+
+            if dx==0:
+                drawing_heigth = 60
+                if dy>0:
+                    drawingkords_x = verbindung.kordsVerbundenerPunkt1[0]-5
+                    drawingkords_y = verbindung.kordsVerbundenerPunkt1[1]+20
+
+                elif dy<0:
+                    drawingkords_x = verbindung.kordsVerbundenerPunkt2[0]-5
+                    drawingkords_y = verbindung.kordsVerbundenerPunkt2[1]+20
+
+            elif dy==0:
+                drawing_width = 60
+                if dx>0:
+                    drawingkords_x = verbindung.kordsVerbundenerPunkt1[0]+20
+                    drawingkords_y = verbindung.kordsVerbundenerPunkt1[1]-5
+
+                elif dx<0:
+                    drawingkords_x = verbindung.kordsVerbundenerPunkt2[0]+20
+                    drawingkords_y = verbindung.kordsVerbundenerPunkt2[1]-5
+
+            pygame.draw.rect(screen, verbindung.Farbe, (drawingkords_x, drawingkords_y, drawing_width, drawing_heigth), 0)
 
 class Punkt:
     def __init__(self, Koordinaten, Radius, Farbe):
