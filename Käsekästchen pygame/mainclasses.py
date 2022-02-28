@@ -1,7 +1,7 @@
 import datastructures
 import pygame
 import colors
-
+from helper import *
 
 class Spielbrett:
     def __init__(self, AnzahlKästchenHo, AnzahlKästchenVer, RadiusPunkte):
@@ -59,8 +59,17 @@ class Spielbrett:
 
     def VerbindungHinzufuegen(self, indicesAngeklickteZweiPunkte, kordsindicesAngeklickteZweiPunkte, spielerID, spielerVerbindungsfarbe):
 
+
+        if returniereAlleVerbundenenPunkte(self.verbindungen, indicesAngeklickteZweiPunkte[1]).Laenge()==0:
+            indicesAngeklickteZweiPunkte[0], indicesAngeklickteZweiPunkte[1] = indicesAngeklickteZweiPunkte[1], indicesAngeklickteZweiPunkte[0]
+
+
         v = Verbindung(indicesAngeklickteZweiPunkte[0], indicesAngeklickteZweiPunkte[1], kordsindicesAngeklickteZweiPunkte[0], kordsindicesAngeklickteZweiPunkte[1], spielerID, spielerVerbindungsfarbe)
         self.verbindungen.einreihen(v)
+        if neuespolygongebildet(self.verbindungen, v):
+            return True
+        else:
+            return False
 
     def show(self, screen):
         #show punkte

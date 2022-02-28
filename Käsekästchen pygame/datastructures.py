@@ -32,6 +32,19 @@ class Schlange:
 
         self.__laenge += 1
 
+    def letztesRaus(self):
+        if (self.__laenge==1):
+            self.__erster = None
+            self.__laenge = 0
+
+        elif (self.__laenge>1):
+            x = self.__erster
+            for i in range(self.__laenge-2):
+                x = x.naechster
+            x.naechster = None
+            self.__laenge -= 1
+
+
     def Schlangeverlassen(self):
         self.__erster = self.__erster.naechster
         self.__laenge -= 1
@@ -59,7 +72,7 @@ class Schlange:
         x = self.__erster
         if x != None:
             while True:
-                out += str((x.kfz, x.typ, x.tauglich))
+                out += str((x.element))
                 if x.naechster != None:
                     out += ", "
                 if x.naechster == None:
