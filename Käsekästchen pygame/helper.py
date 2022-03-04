@@ -1,4 +1,5 @@
 import datastructures
+from copy import *
 
 def horizontaldervertikalbenachbart(indicesAngeklickteZweiPunkte):
     indicesPunkt1 = indicesAngeklickteZweiPunkte[0]
@@ -21,7 +22,7 @@ def returniereAlleVerbundenenPunkte(verbindungen, punktIndizes):
     return indizesVerbundenePunkte
 
 
-def neuespolygongebildet(verbindungen, verbindung):
+def neuespolygongebildet(verbindungen, verbindung, insgesamtBereitsÜberlaufenePfade):
 
     def punktinpunkteschlange(punkt, gegangenePunkte):
         laenge = gegangenePunkte.Laenge()
@@ -31,31 +32,34 @@ def neuespolygongebildet(verbindungen, verbindung):
                 return True
         return False
 
-    def einenPunktWeiter(punkt, startpunkt, gegangenePunkte):
+    def pfadInAbgelaufenenPfade(pfad, listeAbgelaufenePfade):
+        for i in listeAbgelaufenePfade:
+            if pfad.elementeentsprechensich(i):
+                return True
+        return False
+
+    def einenPunktWeiter(punkt, startpunkt, gegangenePunkte, bereitsÜberlaufenePfade):
         gegangenePunkte.einreihen(punkt)
         verbundenePunkte = returniereAlleVerbundenenPunkte(verbindungen, punkt)
-        #print(punkt, " --> ", verbundenePunkte, gegangenePunkte)
 
         laenge = verbundenePunkte.Laenge()
         for i in range(laenge): #alle verbundenen Punkte durchgehen
             p = verbundenePunkte.ElementReturnieren(i)
-            if p[0]==startpunkt[0] and p[1]==startpunkt[1] and gegangenePunkte.Laenge()>4: #wenn man erneut bei Startpunkt angelangt #and not(ueberpruefeObPunktInPunktschlange(punkt, benachbartePunkteAnfangspunkt)
-                print("Pfad gefunden! ", gegangenePunkte)
-                return gegangenePunkte
+            if p[0]==startpunkt[0] and p[1]==startpunkt[1] and (gegangenePunkte.Laenge()==4) : #wenn man erneut bei Startpunkt angelangt #and not(ueberpruefeObPunktInPunktschlange(punkt, benachbartePunkteAnfangspunkt)
+                if not(pfadInAbgelaufenenPfade(gegangenePunkte, insgesamtBereitsÜberlaufenePfade)):
+                    #print("Pfad gefunden! ", gegangenePunkte, " --------> ", insgesamtBereitsÜberlaufenePfade)
+                    neuergegangenerpfad = copy(gegangenePunkte)
+                    bereitsÜberlaufenePfade.append(neuergegangenerpfad)
+                    print(bereitsÜberlaufenePfade[0], "  ", bereitsÜberlaufenePfade[1])
 
             if not(punktinpunkteschlange(p,  gegangenePunkte)):
-                return einenPunktWeiter(p, startpunkt, gegangenePunkte)
+                 einenPunktWeiter(p, startpunkt, gegangenePunkte, bereitsÜberlaufenePfade)
 
         gegangenePunkte.letztesRaus()
 
 
     startpunkt = verbindung.verbundenerPunkt1Indices
     gegangenePunkte = datastructures.Schlange()
-    gegangenePunkte.einreihen(startpunkt)
-    pfad = einenPunktWeiter(startpunkt, startpunkt, gegangenePunkte)
-
-    if not(pfad==None):
-        return True
-
-    else:
-        return False
+    bereitsÜberlaufenePfade = []
+    einenPunktWeiter(startpunkt, startpunkt, gegangenePunkte, bereitsÜberlaufenePfade)
+    return bereitsÜberlaufenePfade

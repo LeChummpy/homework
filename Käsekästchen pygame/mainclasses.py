@@ -7,6 +7,7 @@ class Spielbrett:
     def __init__(self, AnzahlKästchenHo, AnzahlKästchenVer, RadiusPunkte):
         self.punkte = datastructures.Bitboard(AnzahlKästchenHo, AnzahlKästchenVer)
         self.verbindungen = datastructures.Schlange()
+        self.insgesamtBereitsÜberlaufenePfade = []
 
         for i in range(1, AnzahlKästchenVer+1):
             innereliste = []
@@ -66,7 +67,9 @@ class Spielbrett:
 
         v = Verbindung(indicesAngeklickteZweiPunkte[0], indicesAngeklickteZweiPunkte[1], kordsindicesAngeklickteZweiPunkte[0], kordsindicesAngeklickteZweiPunkte[1], spielerID, spielerVerbindungsfarbe)
         self.verbindungen.einreihen(v)
-        if neuespolygongebildet(self.verbindungen, v):
+        bereitsÜberlaufenePfade = neuespolygongebildet(self.verbindungen, v, self.insgesamtBereitsÜberlaufenePfade)
+        self.insgesamtBereitsÜberlaufenePfade += bereitsÜberlaufenePfade
+        if len(bereitsÜberlaufenePfade)!=0:
             return True
         else:
             return False

@@ -11,6 +11,43 @@ class Schlange:
     def Laenge(self):
         return self.__laenge
 
+    def gleicht(self, andereSchlange):
+        eigeneLaenge = self.__laenge
+        andereLange = andereSchlange.Laenge()
+        if eigeneLaenge!=andereLange:
+            return False
+        else:
+
+            for i in range(eigeneLaenge):
+                eigenesElementAnIndex = self.ElementReturnieren(i)
+                fremdesElementAnIndex = andereSchlange.ElementReturnieren(i)
+                if eigenesElementAnIndex!=fremdesElementAnIndex:
+                    return False
+            return True
+
+    def elemententhalten(self, element):
+        eigeneLaenge = self.__laenge
+        for i in range(eigeneLaenge):
+            eigenesElementAnIndex = self.ElementReturnieren(i)
+            if eigenesElementAnIndex==element:
+                return True
+        return False
+
+    def elementeentsprechensich(self, andereSchlange):
+        #print(self, "  ----->   ", andereSchlange)
+        eigeneLaenge = self.__laenge
+        andereLange = andereSchlange.Laenge()
+        #print(eigeneLaenge, " ", andereLange)
+
+        if eigeneLaenge!=andereLange:
+            return False
+        else:
+            for i in range(eigeneLaenge):
+                eigenesElementAnIndex = self.ElementReturnieren(i)
+                if not(andereSchlange.elemententhalten(eigenesElementAnIndex)):
+                    return False
+            return True
+
     def ElementReturnieren(self, index):
         x = self.__erster
         for i in range(index):
