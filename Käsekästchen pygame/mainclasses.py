@@ -7,7 +7,6 @@ class Spielbrett:
     def __init__(self, AnzahlKästchenHo, AnzahlKästchenVer, RadiusPunkte):
         self.punkte = datastructures.Bitboard(AnzahlKästchenHo, AnzahlKästchenVer)
         self.verbindungen = datastructures.Schlange()
-        self.insgesamtBereitsÜberlaufenePfade = []
 
         for i in range(1, AnzahlKästchenVer+1):
             innereliste = []
@@ -60,19 +59,11 @@ class Spielbrett:
 
     def VerbindungHinzufuegen(self, indicesAngeklickteZweiPunkte, kordsindicesAngeklickteZweiPunkte, spielerID, spielerVerbindungsfarbe):
 
-
-        if returniereAlleVerbundenenPunkte(self.verbindungen, indicesAngeklickteZweiPunkte[1]).Laenge()==0:
-            indicesAngeklickteZweiPunkte[0], indicesAngeklickteZweiPunkte[1] = indicesAngeklickteZweiPunkte[1], indicesAngeklickteZweiPunkte[0]
-
-
         v = Verbindung(indicesAngeklickteZweiPunkte[0], indicesAngeklickteZweiPunkte[1], kordsindicesAngeklickteZweiPunkte[0], kordsindicesAngeklickteZweiPunkte[1], spielerID, spielerVerbindungsfarbe)
         self.verbindungen.einreihen(v)
-        bereitsÜberlaufenePfade = neuespolygongebildet(self.verbindungen, v, self.insgesamtBereitsÜberlaufenePfade)
-        self.insgesamtBereitsÜberlaufenePfade += bereitsÜberlaufenePfade
-        if len(bereitsÜberlaufenePfade)!=0:
-            return True
-        else:
-            return False
+
+        entstandenesViereck = neuespolygongebildet(self.verbindungen, v)
+        return entstandenesViereck
 
     def show(self, screen):
         #show punkte
@@ -149,6 +140,9 @@ class Verbindung:
         self.kordsVerbundenerPunkt2 = kordsVerbundenerPunkt2
         self.spielerID = SpielerID
         self.Farbe = spielerVerbindungsfarbe
+
+    def __str__(self):
+        return ("[ " + str(self.verbundenerPunkt1Indices) + " , " + str(self.verbundenerPunkt2Indices) + " ]")
 
 class Spieler:
     def __init__(self, ID, Verbindungsfarbe):

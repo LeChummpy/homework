@@ -11,49 +11,20 @@ class Schlange:
     def Laenge(self):
         return self.__laenge
 
-    def gleicht(self, andereSchlange):
-        eigeneLaenge = self.__laenge
-        andereLange = andereSchlange.Laenge()
-        if eigeneLaenge!=andereLange:
-            return False
-        else:
-
-            for i in range(eigeneLaenge):
-                eigenesElementAnIndex = self.ElementReturnieren(i)
-                fremdesElementAnIndex = andereSchlange.ElementReturnieren(i)
-                if eigenesElementAnIndex!=fremdesElementAnIndex:
-                    return False
-            return True
-
-    def elemententhalten(self, element):
-        eigeneLaenge = self.__laenge
-        for i in range(eigeneLaenge):
-            eigenesElementAnIndex = self.ElementReturnieren(i)
-            if eigenesElementAnIndex==element:
-                return True
-        return False
-
-    def elementeentsprechensich(self, andereSchlange):
-        #print(self, "  ----->   ", andereSchlange)
-        eigeneLaenge = self.__laenge
-        andereLange = andereSchlange.Laenge()
-        #print(eigeneLaenge, " ", andereLange)
-
-        if eigeneLaenge!=andereLange:
-            return False
-        else:
-            for i in range(eigeneLaenge):
-                eigenesElementAnIndex = self.ElementReturnieren(i)
-                if not(andereSchlange.elemententhalten(eigenesElementAnIndex)):
-                    return False
-            return True
-
     def ElementReturnieren(self, index):
         x = self.__erster
         for i in range(index):
             x = x.naechster
         return x.element
 
+    def verbindungenthalten(self, v):
+        for i in range(self.__laenge):
+            vschlange = self.ElementReturnieren(i)
+            if (v.verbundenerPunkt1Indices[0]==vschlange.verbundenerPunkt1Indices[0] and v.verbundenerPunkt1Indices[1]==vschlange.verbundenerPunkt1Indices[1]) and (v.verbundenerPunkt2Indices[0]==vschlange.verbundenerPunkt2Indices[0] and v.verbundenerPunkt2Indices[1]==vschlange.verbundenerPunkt2Indices[1]):
+                    return True
+            elif (v.verbundenerPunkt2Indices[0]==vschlange.verbundenerPunkt1Indices[0] and v.verbundenerPunkt2Indices[1]==vschlange.verbundenerPunkt1Indices[1]) and (v.verbundenerPunkt1Indices[0]==vschlange.verbundenerPunkt2Indices[0] and v.verbundenerPunkt1Indices[1]==vschlange.verbundenerPunkt2Indices[1]):
+                    return True
+        return False
 
     def einreihen(self, e):
         e =  self.__Knoten(e)
@@ -80,7 +51,6 @@ class Schlange:
                 x = x.naechster
             x.naechster = None
             self.__laenge -= 1
-
 
     def Schlangeverlassen(self):
         self.__erster = self.__erster.naechster

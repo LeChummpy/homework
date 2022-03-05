@@ -1,5 +1,5 @@
 import datastructures
-from copy import *
+import mainclasses
 
 def horizontaldervertikalbenachbart(indicesAngeklickteZweiPunkte):
     indicesPunkt1 = indicesAngeklickteZweiPunkte[0]
@@ -9,57 +9,62 @@ def horizontaldervertikalbenachbart(indicesAngeklickteZweiPunkte):
     else:
         return False
 
-def returniereAlleVerbundenenPunkte(verbindungen, punktIndizes):
-    indizesVerbundenePunkte = datastructures.Schlange()
-    leange = verbindungen.Laenge()
-    for i in range(leange):
-        v = verbindungen.ElementReturnieren(i)
-        if v.verbundenerPunkt1Indices[0]==punktIndizes[0] and v.verbundenerPunkt1Indices[1]==punktIndizes[1]:
-            indizesVerbundenePunkte.einreihen(v.verbundenerPunkt2Indices)
+def neuespolygongebildet(verbindungen, verbindung):
+    indicespunkt1 = verbindung.verbundenerPunkt1Indices
+    indicespunkt2 = verbindung.verbundenerPunkt2Indices
 
-        elif v.verbundenerPunkt2Indices[0]==punktIndizes[0] and v.verbundenerPunkt2Indices[1]==punktIndizes[1]:
-            indizesVerbundenePunkte.einreihen(v.verbundenerPunkt1Indices)
-    return indizesVerbundenePunkte
+    dx = verbindung.kordsVerbundenerPunkt2[0] - verbindung.kordsVerbundenerPunkt1[0]
+    dy = verbindung.kordsVerbundenerPunkt2[1] - verbindung.kordsVerbundenerPunkt1[1]
 
+    if dx==0: #wenn Verbindung vertikal verläuft
+        #zu überprüfende Verbindungen falls Viereck links von Verbindung liegt
+        indicespunktrechtsebenepunkt1 = (indicespunkt1[0]+1, indicespunkt1[1])
+        indicespunktrechtsebenepunkt2 = (indicespunkt2[0]+1, indicespunkt2[1])
 
-def neuespolygongebildet(verbindungen, verbindung, insgesamtBereitsÜberlaufenePfade):
+        rechts = mainclasses.Verbindung(indicespunktrechtsebenepunkt1, indicespunktrechtsebenepunkt2, None, None, None, None )
+        horizontalrechts1 = mainclasses.Verbindung(indicespunkt1, indicespunktrechtsebenepunkt1, None, None, None, None )
+        horizontalrechts2 = mainclasses.Verbindung(indicespunkt2, indicespunktrechtsebenepunkt2, None, None, None, None )
 
-    def punktinpunkteschlange(punkt, gegangenePunkte):
-        laenge = gegangenePunkte.Laenge()
-        for i in range(laenge):
-            x = gegangenePunkte.ElementReturnieren(i)
-            if x[0]==punkt[0] and x[1]==punkt[1]:
-                return True
-        return False
+        #Verbindungen falls Viereck rechts von Verbindung liegt
+        indicespunktlinksebenepunkt1 = (indicespunkt1[0]-1, indicespunkt1[1])
+        indicespunktlinksebenepunkt2 = (indicespunkt2[0]-1, indicespunkt2[1])
 
-    def pfadInAbgelaufenenPfade(pfad, listeAbgelaufenePfade):
-        for i in listeAbgelaufenePfade:
-            if pfad.elementeentsprechensich(i):
-                return True
-        return False
+        links = mainclasses.Verbindung(indicespunktlinksebenepunkt1, indicespunktlinksebenepunkt2, None, None, None, None )
+        horizontallinks1 = mainclasses.Verbindung(indicespunkt1, indicespunktlinksebenepunkt1, None, None, None, None )
+        horizontallinks2 = mainclasses.Verbindung(indicespunkt2, indicespunktlinksebenepunkt2, None, None, None, None )
 
-    def einenPunktWeiter(punkt, startpunkt, gegangenePunkte, bereitsÜberlaufenePfade):
-        gegangenePunkte.einreihen(punkt)
-        verbundenePunkte = returniereAlleVerbundenenPunkte(verbindungen, punkt)
+        if (verbindungen.verbindungenthalten(rechts) and verbindungen.verbindungenthalten(horizontalrechts1) and verbindungen.verbindungenthalten(horizontalrechts1)):
+            return [verbindung, rechts, horizontalrechts1, horizontalrechts2]
 
-        laenge = verbundenePunkte.Laenge()
-        for i in range(laenge): #alle verbundenen Punkte durchgehen
-            p = verbundenePunkte.ElementReturnieren(i)
-            if p[0]==startpunkt[0] and p[1]==startpunkt[1] and (gegangenePunkte.Laenge()==4) : #wenn man erneut bei Startpunkt angelangt #and not(ueberpruefeObPunktInPunktschlange(punkt, benachbartePunkteAnfangspunkt)
-                if not(pfadInAbgelaufenenPfade(gegangenePunkte, insgesamtBereitsÜberlaufenePfade)):
-                    #print("Pfad gefunden! ", gegangenePunkte, " --------> ", insgesamtBereitsÜberlaufenePfade)
-                    neuergegangenerpfad = copy(gegangenePunkte)
-                    bereitsÜberlaufenePfade.append(neuergegangenerpfad)
-                    print(bereitsÜberlaufenePfade[0], "  ", bereitsÜberlaufenePfade[1])
+        elif(verbindungen.verbindungenthalten(links) and verbindungen.verbindungenthalten(horizontallinks1) and verbindungen.verbindungenthalten(horizontallinks2)):
+            return True
 
-            if not(punktinpunkteschlange(p,  gegangenePunkte)):
-                 einenPunktWeiter(p, startpunkt, gegangenePunkte, bereitsÜberlaufenePfade)
-
-        gegangenePunkte.letztesRaus()
+        else:
+            return False
 
 
-    startpunkt = verbindung.verbundenerPunkt1Indices
-    gegangenePunkte = datastructures.Schlange()
-    bereitsÜberlaufenePfade = []
-    einenPunktWeiter(startpunkt, startpunkt, gegangenePunkte, bereitsÜberlaufenePfade)
-    return bereitsÜberlaufenePfade
+    elif dy==0: #wenn Verbindung horizontal verläuft
+        #zu überprüfende Verbindungen falls Viereck über Verbindung liegt
+        indicespunktuntenebenepunkt1 = (indicespunkt1[0], indicespunkt1[1]+1)
+        indicespunktuntenebenepunkt2 = (indicespunkt2[0], indicespunkt2[1]+1)
+
+        unten = mainclasses.Verbindung(indicespunktuntenebenepunkt1, indicespunktuntenebenepunkt2, None, None, None, None )
+        vertikalunten1 = mainclasses.Verbindung(indicespunkt1, indicespunktuntenebenepunkt1, None, None, None, None )
+        vertikalunten2 = mainclasses.Verbindung(indicespunkt2, indicespunktuntenebenepunkt2, None, None, None, None )
+
+        #zu überprüfende Verbindungen falls Viereck unter Verbindung liegt
+        indicespunktobenebenepunkt1 = (indicespunkt1[0], indicespunkt1[1]-1)
+        indicespunktobenebenepunkt2 = (indicespunkt2[0], indicespunkt2[1]-1)
+
+        oben = mainclasses.Verbindung(indicespunktobenebenepunkt1, indicespunktobenebenepunkt2, None, None, None, None )
+        vertikaloben1 = mainclasses.Verbindung(indicespunkt1, indicespunktobenebenepunkt1, None, None, None, None )
+        vertikaloben2 = mainclasses.Verbindung(indicespunkt2, indicespunktobenebenepunkt2, None, None, None, None )
+
+        if (verbindungen.verbindungenthalten(unten) and verbindungen.verbindungenthalten(vertikalunten1) and verbindungen.verbindungenthalten(vertikalunten2)):
+            return True
+
+        elif(verbindungen.verbindungenthalten(oben) and verbindungen.verbindungenthalten(vertikaloben1) and verbindungen.verbindungenthalten(vertikaloben2)):
+            return True
+
+        else:
+            return False
