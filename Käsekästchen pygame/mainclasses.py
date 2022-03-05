@@ -5,6 +5,8 @@ from helper import *
 
 class Spielbrett:
     def __init__(self, AnzahlKästchenHo, AnzahlKästchenVer, RadiusPunkte):
+        self.AnzahlKästchenHo = AnzahlKästchenHo
+        self.AnzahlKästchenVer = AnzahlKästchenVer
         self.punkte = datastructures.Bitboard(AnzahlKästchenHo, AnzahlKästchenVer)
         self.verbindungen = datastructures.Schlange()
 
