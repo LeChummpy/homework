@@ -33,16 +33,23 @@ def neuespolygongebildet(verbindungen, verbindung):
         horizontallinks1 = mainclasses.Verbindung(indicespunkt1, indicespunktlinksebenepunkt1, None, None, None, None )
         horizontallinks2 = mainclasses.Verbindung(indicespunkt2, indicespunktlinksebenepunkt2, None, None, None, None )
 
-        if (verbindungen.verbindungenthalten(rechts) and verbindungen.verbindungenthalten(horizontalrechts1) and verbindungen.verbindungenthalten(horizontalrechts1)) and (verbindungen.verbindungenthalten(links) and verbindungen.verbindungenthalten(horizontallinks1) and verbindungen.verbindungenthalten(horizontallinks2)):
-            return [(verbindung, rechts, horizontalrechts1, horizontalrechts2), (verbindung, links, horizontallinks1, horizontallinks2)]
+        verbindunggleichmitrechts = verbindungen.verbindungenthalten(rechts)
+        verbindunggleichmithorizintalrechts1 = verbindungen.verbindungenthalten(horizontalrechts1)
+        verbindunggleichmithorizintalrechts2 = verbindungen.verbindungenthalten(horizontalrechts2)
 
-        elif (verbindungen.verbindungenthalten(rechts) and verbindungen.verbindungenthalten(horizontalrechts1) and verbindungen.verbindungenthalten(horizontalrechts2)):
-            return [(verbindung, rechts, horizontalrechts1, horizontalrechts2)]
-
-        elif(verbindungen.verbindungenthalten(links) and verbindungen.verbindungenthalten(horizontallinks1) and verbindungen.verbindungenthalten(horizontallinks2)):
-            return [(verbindung, links, horizontallinks1, horizontallinks2)]
+        verbindunggleichmitlinks = verbindungen.verbindungenthalten(links)
+        verbindunggleichmithorizintallinks1= verbindungen.verbindungenthalten(horizontallinks1)
+        verbindunggleichmithorizintallinks2 = verbindungen.verbindungenthalten(horizontallinks2)
 
 
+        if (verbindunggleichmitrechts!=None and verbindunggleichmithorizintalrechts1!=None and verbindunggleichmithorizintalrechts2!=None) and (verbindunggleichmitlinks!=None and verbindunggleichmithorizintallinks1!=None and verbindunggleichmithorizintallinks2!=None):
+            return [(verbindung, verbindunggleichmitrechts, verbindunggleichmithorizintalrechts1, verbindunggleichmithorizintalrechts2), (verbindung, verbindunggleichmitlinks, verbindunggleichmithorizintallinks1, verbindunggleichmithorizintallinks2)]
+
+        elif (verbindunggleichmitrechts!=None and verbindunggleichmithorizintalrechts1!=None and verbindunggleichmithorizintalrechts2!=None):
+            return [(verbindung, verbindunggleichmitrechts, verbindunggleichmithorizintalrechts1, verbindunggleichmithorizintalrechts2)]
+
+        elif (verbindunggleichmitlinks!=None and verbindunggleichmithorizintallinks1!=None and verbindunggleichmithorizintallinks2!=None):
+            return [(verbindung, verbindunggleichmitlinks, verbindunggleichmithorizintallinks1, verbindunggleichmithorizintallinks2)]
 
         else:
             return None
@@ -65,15 +72,22 @@ def neuespolygongebildet(verbindungen, verbindung):
         vertikaloben1 = mainclasses.Verbindung(indicespunkt1, indicespunktobenebenepunkt1, None, None, None, None )
         vertikaloben2 = mainclasses.Verbindung(indicespunkt2, indicespunktobenebenepunkt2, None, None, None, None )
 
-        if (verbindungen.verbindungenthalten(unten) and verbindungen.verbindungenthalten(vertikalunten1) and verbindungen.verbindungenthalten(vertikalunten2)) and (verbindungen.verbindungenthalten(oben) and verbindungen.verbindungenthalten(vertikaloben1) and verbindungen.verbindungenthalten(vertikaloben2)):
-            return [(verbindung, unten, vertikalunten1, vertikalunten2), (verbindung, oben, vertikaloben1, vertikaloben2)]
+        verbindunggleichmitunten = verbindungen.verbindungenthalten(unten)
+        verbindunggleichmitvertikalunten1 = verbindungen.verbindungenthalten(vertikalunten1)
+        verbindunggleichmitvertikalunten2 = verbindungen.verbindungenthalten(vertikalunten2)
 
+        verbindunggleichmitoben = verbindungen.verbindungenthalten(oben)
+        verbindunggleichmitvertikaloben1= verbindungen.verbindungenthalten(vertikaloben1)
+        verbindunggleichmitvertikaloben2 = verbindungen.verbindungenthalten(vertikaloben2)
 
-        elif (verbindungen.verbindungenthalten(unten) and verbindungen.verbindungenthalten(vertikalunten1) and verbindungen.verbindungenthalten(vertikalunten2)):
-            return [(verbindung, unten, vertikalunten1, vertikalunten2)]
+        if (verbindunggleichmitunten!=None and verbindunggleichmitvertikalunten1!=None and verbindunggleichmitvertikalunten2!=None) and (verbindunggleichmitoben!=None and verbindunggleichmitvertikaloben1!=None and verbindunggleichmitvertikaloben2!=None):
+            return [(verbindung, verbindunggleichmitunten, verbindunggleichmitvertikalunten1, verbindunggleichmitvertikalunten2), (verbindung, verbindunggleichmitoben, verbindunggleichmitvertikaloben1, verbindunggleichmitvertikaloben2)]
 
-        elif (verbindungen.verbindungenthalten(oben) and verbindungen.verbindungenthalten(vertikaloben1) and verbindungen.verbindungenthalten(vertikaloben2)):
-            return [(verbindung, oben, vertikaloben1, vertikaloben2)]
+        elif (verbindunggleichmitunten!=None and verbindunggleichmitvertikalunten1!=None and verbindunggleichmitvertikalunten2!=None):
+            return [(verbindung, verbindunggleichmitunten, verbindunggleichmitvertikalunten1, verbindunggleichmitvertikalunten2)]
+
+        elif (verbindunggleichmitoben!=None and verbindunggleichmitvertikaloben1!=None and verbindunggleichmitvertikaloben2!=None):
+            return [(verbindung, verbindunggleichmitoben, verbindunggleichmitvertikaloben1, verbindunggleichmitvertikaloben2)]
 
         else:
             return None

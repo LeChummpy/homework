@@ -62,8 +62,18 @@ class Spielbrett:
         v = Verbindung(indicesAngeklickteZweiPunkte[0], indicesAngeklickteZweiPunkte[1], kordsindicesAngeklickteZweiPunkte[0], kordsindicesAngeklickteZweiPunkte[1], spielerID, spielerVerbindungsfarbe)
         self.verbindungen.einreihen(v)
 
-        entstandenesViereck = neuespolygongebildet(self.verbindungen, v)
-        return entstandenesViereck
+        verbindungenentstandeneneuevierecke = neuespolygongebildet(self.verbindungen, v)
+        if verbindungenentstandeneneuevierecke!=None:
+            for i in verbindungenentstandeneneuevierecke:
+                for j in i:
+                    j.Farbe = colors.pretty_green
+
+            if len(verbindungenentstandeneneuevierecke)==1:
+                return 1
+            elif len(verbindungenentstandeneneuevierecke)==2:
+                return 2
+        else:
+            return 0
 
     def show(self, screen):
         #show punkte

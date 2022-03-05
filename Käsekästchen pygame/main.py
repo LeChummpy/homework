@@ -83,14 +83,10 @@ class ActualGame():
                     if (horizontaldervertikalbenachbart(self.indizes_paar_angeklickter_punkte)):
                         if not(self.current_Spielbrett.angeklicktePunkteExistierenSchonAlsVerbindung(self.indizes_paar_angeklickter_punkte)):
                             kordsangeklicktezweipunkte = self.current_Spielbrett.KordsAngeklicktePunkteReturnieren(self.indizes_paar_angeklickter_punkte)
-                            neuespolygongebildet = self.current_Spielbrett.VerbindungHinzufuegen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
+                            gewonnenepunkte = self.current_Spielbrett.VerbindungHinzufuegen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
 
-                            if neuespolygongebildet!=None:
-                                if len(neuespolygongebildet)==1:
-                                    self.am_Zug.Punkte += 1
-
-                                elif len(neuespolygongebildet)==2:
-                                    self.am_Zug.Punkte += 2
+                            if gewonnenepunkte>0:
+                                self.am_Zug.Punkte += gewonnenepunkte
 
                             else:
 
