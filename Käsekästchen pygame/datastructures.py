@@ -21,10 +21,10 @@ class Schlange:
         for i in range(self.__laenge):
             vschlange = self.ElementReturnieren(i)
             if (v.verbundenerPunkt1Indices[0]==vschlange.verbundenerPunkt1Indices[0] and v.verbundenerPunkt1Indices[1]==vschlange.verbundenerPunkt1Indices[1]) and (v.verbundenerPunkt2Indices[0]==vschlange.verbundenerPunkt2Indices[0] and v.verbundenerPunkt2Indices[1]==vschlange.verbundenerPunkt2Indices[1]):
-                    return True
+                    return vschlange
             elif (v.verbundenerPunkt2Indices[0]==vschlange.verbundenerPunkt1Indices[0] and v.verbundenerPunkt2Indices[1]==vschlange.verbundenerPunkt1Indices[1]) and (v.verbundenerPunkt1Indices[0]==vschlange.verbundenerPunkt2Indices[0] and v.verbundenerPunkt1Indices[1]==vschlange.verbundenerPunkt2Indices[1]):
-                    return True
-        return False
+                    return vschlange
+        return None
 
     def einreihen(self, e):
         e =  self.__Knoten(e)

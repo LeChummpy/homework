@@ -33,14 +33,19 @@ def neuespolygongebildet(verbindungen, verbindung):
         horizontallinks1 = mainclasses.Verbindung(indicespunkt1, indicespunktlinksebenepunkt1, None, None, None, None )
         horizontallinks2 = mainclasses.Verbindung(indicespunkt2, indicespunktlinksebenepunkt2, None, None, None, None )
 
-        if (verbindungen.verbindungenthalten(rechts) and verbindungen.verbindungenthalten(horizontalrechts1) and verbindungen.verbindungenthalten(horizontalrechts1)):
-            return [verbindung, rechts, horizontalrechts1, horizontalrechts2]
+        if (verbindungen.verbindungenthalten(rechts) and verbindungen.verbindungenthalten(horizontalrechts1) and verbindungen.verbindungenthalten(horizontalrechts1)) and (verbindungen.verbindungenthalten(links) and verbindungen.verbindungenthalten(horizontallinks1) and verbindungen.verbindungenthalten(horizontallinks2)):
+            return [(verbindung, rechts, horizontalrechts1, horizontalrechts2), (verbindung, links, horizontallinks1, horizontallinks2)]
+
+        elif (verbindungen.verbindungenthalten(rechts) and verbindungen.verbindungenthalten(horizontalrechts1) and verbindungen.verbindungenthalten(horizontalrechts2)):
+            return [(verbindung, rechts, horizontalrechts1, horizontalrechts2)]
 
         elif(verbindungen.verbindungenthalten(links) and verbindungen.verbindungenthalten(horizontallinks1) and verbindungen.verbindungenthalten(horizontallinks2)):
-            return True
+            return [(verbindung, links, horizontallinks1, horizontallinks2)]
+
+
 
         else:
-            return False
+            return None
 
 
     elif dy==0: #wenn Verbindung horizontal verläuft
@@ -60,11 +65,15 @@ def neuespolygongebildet(verbindungen, verbindung):
         vertikaloben1 = mainclasses.Verbindung(indicespunkt1, indicespunktobenebenepunkt1, None, None, None, None )
         vertikaloben2 = mainclasses.Verbindung(indicespunkt2, indicespunktobenebenepunkt2, None, None, None, None )
 
-        if (verbindungen.verbindungenthalten(unten) and verbindungen.verbindungenthalten(vertikalunten1) and verbindungen.verbindungenthalten(vertikalunten2)):
-            return True
+        if (verbindungen.verbindungenthalten(unten) and verbindungen.verbindungenthalten(vertikalunten1) and verbindungen.verbindungenthalten(vertikalunten2)) and (verbindungen.verbindungenthalten(oben) and verbindungen.verbindungenthalten(vertikaloben1) and verbindungen.verbindungenthalten(vertikaloben2)):
+            return [(verbindung, unten, vertikalunten1, vertikalunten2), (verbindung, oben, vertikaloben1, vertikaloben2)]
 
-        elif(verbindungen.verbindungenthalten(oben) and verbindungen.verbindungenthalten(vertikaloben1) and verbindungen.verbindungenthalten(vertikaloben2)):
-            return True
+
+        elif (verbindungen.verbindungenthalten(unten) and verbindungen.verbindungenthalten(vertikalunten1) and verbindungen.verbindungenthalten(vertikalunten2)):
+            return [(verbindung, unten, vertikalunten1, vertikalunten2)]
+
+        elif (verbindungen.verbindungenthalten(oben) and verbindungen.verbindungenthalten(vertikaloben1) and verbindungen.verbindungenthalten(vertikaloben2)):
+            return [(verbindung, oben, vertikaloben1, vertikaloben2)]
 
         else:
-            return False
+            return None

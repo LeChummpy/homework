@@ -85,8 +85,12 @@ class ActualGame():
                             kordsangeklicktezweipunkte = self.current_Spielbrett.KordsAngeklicktePunkteReturnieren(self.indizes_paar_angeklickter_punkte)
                             neuespolygongebildet = self.current_Spielbrett.VerbindungHinzufuegen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
 
-                            if neuespolygongebildet:
-                                self.am_Zug.Punkte += 1
+                            if neuespolygongebildet!=None:
+                                if len(neuespolygongebildet)==1:
+                                    self.am_Zug.Punkte += 1
+
+                                elif len(neuespolygongebildet)==2:
+                                    self.am_Zug.Punkte += 2
 
                             else:
 
