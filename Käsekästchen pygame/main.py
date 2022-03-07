@@ -212,7 +212,6 @@ class MehrspielerHosten:
 
         self.client = networkutils.käsekästchenclient(self, ("localhost", self.serverport))
 
-
         self.indizes_paar_angeklickter_punkte = []
 
     def view(self):
@@ -229,30 +228,8 @@ class MehrspielerHosten:
                     self.indizes_paar_angeklickter_punkte.append(indices)
 
                 if (len(self.indizes_paar_angeklickter_punkte)==2):
-                    if (horizontaldervertikalbenachbart(self.indizes_paar_angeklickter_punkte)):
-                        if not(self.current_Spielbrett.angeklicktePunkteExistierenSchonAlsVerbindung(self.indizes_paar_angeklickter_punkte)):
-                            kordsangeklicktezweipunkte = self.current_Spielbrett.KordsAngeklicktePunkteReturnieren(self.indizes_paar_angeklickter_punkte)
-                            gewonnenepunkte = self.current_Spielbrett.VerbindungHinzufuegen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
+                    self.client.sendeVerbindung(self.indizes_paar_angeklickter_punkte)
 
-                            if gewonnenepunkte>0:
-                                self.am_Zug.Punkte += gewonnenepunkte
-
-                            else:
-
-                                if self.am_Zug.ID == self.current_Spieler1.ID:
-                                    self.am_Zug = self.current_Spieler2
-                                elif self.am_Zug.ID == self.current_Spieler2.ID:
-                                    self.am_Zug = self.current_Spieler1
-
-                    self.indizes_paar_angeklickter_punkte = []
-
-                if self.current_Spielbrett.verbindungen.Laenge()==(self.current_Spielbrett.AnzahlKästchenHo-1)*(self.current_Spielbrett.AnzahlKästchenVer) + (self.current_Spielbrett.AnzahlKästchenVer-1)*(self.current_Spielbrett.AnzahlKästchenHo):
-                    if (self.current_Spieler1.Punkte>self.current_Spieler2.Punkte):
-                        G.current_view = Spielende("Spieler 1", self.current_Spieler1.verbindungsfarbe)
-                    elif (self.current_Spieler2.Punkte>self.current_Spieler1.Punkte):
-                        G.current_view = Spielende("Spieler 2", self.current_Spieler2.verbindungsfarbe)
-                    else:
-                        G.current_view = Spielende("Unentschiden", colors.white)
 
 
         screen.fill(colors.orange)
@@ -273,13 +250,16 @@ class MehrspielerHosten:
         pygame.display.update()
 
 class MehrspielerRaumbeireten():
-    def __init__(self, AnzahlSpalten, AnzahlZeilen, HostnameServer):
+    def __init__(self, AnzahlSpalten, AnzahlZeilen):
 
         self.current_Spielbrett = mainclasses.Spielbrett(AnzahlSpalten, AnzahlZeilen, 20)
         self.current_Spieler1 = mainclasses.Spieler(1, colors.lime_green)
         self.current_Spieler2 = mainclasses.Spieler(2, colors.dark_red)
         self.am_Zug = self.current_Spieler1
-        self.HostnameServer = HostnameServer
+
+        self.serverport = 55555
+
+        self.client = networkutils.käsekästchenclient(self, ("192.168.178.92", self.serverport))
 
         self.indizes_paar_angeklickter_punkte = []
 
@@ -297,31 +277,7 @@ class MehrspielerRaumbeireten():
                     self.indizes_paar_angeklickter_punkte.append(indices)
 
                 if (len(self.indizes_paar_angeklickter_punkte)==2):
-                    if (horizontaldervertikalbenachbart(self.indizes_paar_angeklickter_punkte)):
-                        if not(self.current_Spielbrett.angeklicktePunkteExistierenSchonAlsVerbindung(self.indizes_paar_angeklickter_punkte)):
-                            kordsangeklicktezweipunkte = self.current_Spielbrett.KordsAngeklicktePunkteReturnieren(self.indizes_paar_angeklickter_punkte)
-                            gewonnenepunkte = self.current_Spielbrett.VerbindungHinzufuegen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
-
-                            if gewonnenepunkte>0:
-                                self.am_Zug.Punkte += gewonnenepunkte
-
-                            else:
-
-                                if self.am_Zug.ID == self.current_Spieler1.ID:
-                                    self.am_Zug = self.current_Spieler2
-                                elif self.am_Zug.ID == self.current_Spieler2.ID:
-                                    self.am_Zug = self.current_Spieler1
-
-                    self.indizes_paar_angeklickter_punkte = []
-
-                if self.current_Spielbrett.verbindungen.Laenge()==(self.current_Spielbrett.AnzahlKästchenHo-1)*(self.current_Spielbrett.AnzahlKästchenVer) + (self.current_Spielbrett.AnzahlKästchenVer-1)*(self.current_Spielbrett.AnzahlKästchenHo):
-                    if (self.current_Spieler1.Punkte>self.current_Spieler2.Punkte):
-                        G.current_view = Spielende("Spieler 1", self.current_Spieler1.verbindungsfarbe)
-                    elif (self.current_Spieler2.Punkte>self.current_Spieler1.Punkte):
-                        G.current_view = Spielende("Spieler 2", self.current_Spieler2.verbindungsfarbe)
-                    else:
-                        G.current_view = Spielende("Unentschiden", colors.white)
-
+                    self.client.sendeVerbindung(self.indizes_paar_angeklickter_punkte)
 
         screen.fill(colors.orange)
 
@@ -339,6 +295,7 @@ class MehrspielerRaumbeireten():
 
         self.current_Spielbrett.show(screen)
         pygame.display.update()
+
 
 CLOCK = pygame.time.Clock()
 

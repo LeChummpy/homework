@@ -44,15 +44,15 @@ class käsekästchenserver:
 
                     if client_address[0]=="127.0.0.1":
                         self.current_Spieler1_hostname = client_address[0]
-                        print("sending answer to client")
-                        self.sendToConnection(connection, "1")
+                        #self.sendToConnection(connection, "1")
                     else:
                         self.current_Spieler2_hostname = client_address[0]
-                        self.sendToConnection(connection, "1")
+                        #self.sendToConnection(connection, "1")
 
                 else:   #wenn hostnamen von beiden Spieleclients jedoch bekannt sind
 
                     data = connection.recv()
+                    print("received: ", data)
                     request_parts = data.decode("utf-8").split(" ")
                     operation = request_parts[0]
                     args = request_parts[1].split(",")
@@ -64,8 +64,9 @@ class käsekästchenserver:
 
                         if client_address[0]==self.current_Spieler1_hostname: #wenn anfrage von spieler 1 (Hostgerät) kommt
                             if self.am_Zug.ID==1: #wenn spieler 1 auch dran ist dann füge verbindung hinzu
-                                VerbindungSpielbrettHinzufügen(self, indizes_paar_angeklickter_punkte, self.am_Zug)
+                                self.VerbindungSpielbrettHinzufügen(self, indizes_paar_angeklickter_punkte, self.am_Zug)
                                 self.sendToConnection(connection, "2")
+                                print("Verbindung von Spieler 1 hinzugefügt")
 
                             else:                 #wenn spieler 1 jedoch nicht dran sein sollte, dann füge keine Verbindung hinzu
                                 self.sendToConnection(connection, "1")
@@ -73,8 +74,10 @@ class käsekästchenserver:
 
                         elif client_address[0]==self.current_Spieler2_hostname: #wenn anfrage von spieler 2 (externes Gerät) kommt
                             if self.am_Zug.ID==2: #wenn spieler 2 auch dran ist dann füge verbindung hinzu
-                                VerbindungSpielbrettHinzufügen(self, indizes_paar_angeklickter_punkte, self.am_Zug)
+                                self.VerbindungSpielbrettHinzufügen(self, indizes_paar_angeklickter_punkte, self.am_Zug)
                                 self.sendToConnection(connection, "2")
+                                print("Verbindung von Spieler 2 hinzugefügt")
+
 
                             else:                 #wenn spieler 2 jedoch nicht dran sein sollte, dann füge keine Verbindung hinzu
                                 self.sendToConnection(connection, "1")
@@ -120,15 +123,28 @@ class käsekästchenclient:
     def pingeserveran(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.connect(self.server_address)
-            statuscode = None
+            sock.close()
 
-            status = sock.recv(1024)
+        self.updateGameattribute()
+
+    def updateGameattribute(self):
+        pass
+
+    def sendeVerbindung(self, indizes_paar_angeklickter_punkte):
+
+
+        indices_ersterPunkt = indizes_paar_angeklickter_punkte[0]
+        indices_zweiterPunkt = indizes_paar_angeklickter_punkte[1]
+
+        a1 = indices_ersterPunkt[0]
+        a2 = indices_ersterPunkt[1]
+        b1 = indices_zweiterPunkt[0]
+        b2 = indices_zweiterPunkt[1]
+
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.connect(self.server_address)
+            data ="add_connection " + str(a1) + "," + str(a2) + str(b1) + "," + str(b2)
+            sock.sendall(data.encode())
+            status = sock.recv(16)
             print(status)
-        #while statuscode==None:
-        #    received = sock.recv(16).decode("utf-8")
-        #    print(received)
-
-        #if received!="":
-        #        statuscode = received
-
-        sock.close()
+            sock.close()
