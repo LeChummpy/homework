@@ -97,6 +97,7 @@ class käsekästchenserver:
             except:
                 break
 
+        print("socket closing")
         self.sock.close()
 
         def sendToConnection(self, conn, string):
@@ -123,6 +124,7 @@ class käsekästchenclient:
     def pingeserveran(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.connect(self.server_address)
+            print("sucecssfully pinged server")
             sock.close()
 
         self.updateGameattribute()
