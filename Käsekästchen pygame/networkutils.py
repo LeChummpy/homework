@@ -31,7 +31,7 @@ class käsekästchenserver:
     def handleRequests(self):
         self.sock.bind(self.address)
         self.sock.listen()
-        self.sock.settimeout(0.2)
+        self.sock.settimeout(1.0)
         print("Lokalen Server erfolgreich gestartet auf Port ", self.address[1])
 
         while self.running:
@@ -85,16 +85,17 @@ class käsekästchenserver:
                         else:   #wenn anfage von keinem der beiden spieleclients kommt
                             self.sendToConnection(connection, "0")
 
-                        connection.close()
-
                     elif operation=="update_gamestate":
                         pass
 
+                connection.close()
+
 
             except socket.timeout:
-                pass
+                print("socket timeout")
 
             except:
+                print("soemthing went wrong, shutting down server")
                 break
 
         print("socket closing")

@@ -1,0 +1,7 @@
+white = (247, 247, 247)
+lime = (181, 254, 131)
+orange = (255, 183, 43)
+orange_light = (255, 230, 27)
+dark_red = (179, 48, 48)
+lime_green = (161, 181, 125)
+pretty_green = (1, 146, 103)

@@ -210,7 +210,7 @@ class MehrspielerHosten:
         self.server = networkutils.käsekästchenserver(self.serverport, AnzahlSpalten, AnzahlZeilen)
         self.server.start()
 
-        self.client = networkutils.käsekästchenclient(self, ("localhost", self.serverport))
+        #self.client = networkutils.käsekästchenclient(self, ("localhost", self.serverport))
 
         self.indizes_paar_angeklickter_punkte = []
 
@@ -259,7 +259,7 @@ class MehrspielerRaumbeireten():
 
         self.serverport = 55555
 
-        self.client = networkutils.käsekästchenclient(self, ("192.168.178.92", self.serverport))
+        self.client = networkutils.käsekästchenclient(self, ("localhost", self.serverport))
 
         self.indizes_paar_angeklickter_punkte = []
 
