@@ -5,19 +5,30 @@ class Schlange:
             self.naechster = None
 
     def __init__(self):
+        #Vor.: -
+        #Eff.: Eine Objektinstanz der Klasse Schlange ist erzeugt. Die Schlange ist zunächst leer.
         self.__laenge = 0
         self.__erster = None
 
     def Laenge(self):
+       #Vor.: keine
+       #Erg.: Die Länge der Schlange/die Anzahl der Elemente ist als Integer geliefert.
         return self.__laenge
 
     def ElementReturnieren(self, index):
+        #Vor.: Die Schlange hat eine Länge von -index- plus 1 Elementen
+        #Erg.: Das Element mit dem Index -index- ist geliefert.
         x = self.__erster
         for i in range(index):
             x = x.naechster
         return x.element
 
     def verbindungenthalten(self, v):
+        #Vor.: -v- ist eine Objektinstanz der Klasse Verbindung.
+        #Erg.: Falls die Verbindung als Element im Bitboard mindestens
+        #      einmal enthalten ist, ist die erste in der Schlange auftauchende
+        #      Verbindung, die v gleicht, als 2-elementiger Tuple (der aus 2-elementigen
+        #      Tuples besteht) geliefert. Andernfalls ist False geliefert.
         for i in range(self.__laenge):
             vschlange = self.ElementReturnieren(i)
             if (v.verbundenerPunkt1Indices[0]==vschlange.verbundenerPunkt1Indices[0] and v.verbundenerPunkt1Indices[1]==vschlange.verbundenerPunkt1Indices[1]) and (v.verbundenerPunkt2Indices[0]==vschlange.verbundenerPunkt2Indices[0] and v.verbundenerPunkt2Indices[1]==vschlange.verbundenerPunkt2Indices[1]):
@@ -27,6 +38,9 @@ class Schlange:
         return None
 
     def einreihen(self, e):
+        #Vor.: -
+        #Eff.: Ein Element -e- (z.B. Vebindung, kann aber auch ein anderes Objekt sein)
+        #      wird am Ende der Schlange angehangen.
         e =  self.__Knoten(e)
         x = self.__erster
         if x != None:
@@ -41,6 +55,8 @@ class Schlange:
         self.__laenge += 1
 
     def letztesRaus(self):
+        #Vor.: Mindestens ein Element ist in der Schlange
+        #Eff.: Das letzte Element ist aus der Schlange entfernt.
         if (self.__laenge==1):
             self.__erster = None
             self.__laenge = 0
@@ -53,15 +69,16 @@ class Schlange:
             self.__laenge -= 1
 
     def Schlangeverlassen(self):
+        #Vor.: Mindestens ein Element ist in der Schlange
+        #Eff.: Das erste Element ist aus der Schlange entfernt.
         self.__erster = self.__erster.naechster
         self.__laenge -= 1
 
     def vorziehen(self, n):
-        '''
-        Vorr.: -n- darf nicht 0 sein und darf die Anzahl der Elemente in der Schlange um 1
-               vermindert nicht überschreiten.
-        Eff.: Das Element der Schlange an -n-ter Stelle ist nun an den Beginn der Schlange vorgezogen.
-        '''
+        #Vor.: -n- darf nicht 0 sein und darf die Anzahl der Elemente in der Schlange
+        #      minus 1 nicht überschreiten
+        #Eff.: Das Element der Schlange an -n-ter Stelle ist nun an den Beginn der Schlange vorgezogen.
+
         x_minus_1 = self.__erster
         x = self.__erster
         for i in range(n):
@@ -75,6 +92,8 @@ class Schlange:
 
 
     def __str__(self):
+        #Vor.: -
+        #Erg.: Ein String, der den Inhalt der Schlange eindimensional repräsentiert, ist geliefert.
         out = "[ "
         x = self.__erster
         if x != None:
@@ -101,6 +120,10 @@ class Bitboard:
             self.inhalt = None
 
     def __init__(self, AnzahlSpalten, AnzahlZeilen):
+        #Vor.:: -AnzahlSpalten- und -AnzahlZeilen- sind Integer größer als 1.
+        #Eff.: Eine Objektinstanz der Klasse Bitboard wird erstellt. Bitboard ist eine Datenstruktur,
+        #      die zweidimensionale Schlangen repräsentiert (jedes Element der Schlange ist eine Schlange).
+        #      Die Länge der Schlangen (Kontrollblock) in der Hauptschlange ist hierbei stets gleich.
         self.AnzahlSpalten = AnzahlSpalten
         self.AnzahlZeilen = AnzahlZeilen
 
@@ -121,6 +144,8 @@ class Bitboard:
             x = n
 
     def ElementEinfuegen(self, spaltenindex, zeilenindex, inhalt):
+        #Vor.: Das Bitboard hat beinhaltet bereits -spaltenindex- minus 1 Schlangen mit einer Länge von jeweils -zeilenindex- minus 1 Elementen.
+        #Eff. Ein Elment an horizontalem Index -spaltenindex- und vertikalem Index -zeilenindex- wird in das Bitboard eingefügt.
         x = self.obersterKontrollblock
         for i in range(zeilenindex):
             x = x.naechsterKontrollblock
@@ -132,6 +157,8 @@ class Bitboard:
         y.inhalt = inhalt
 
     def ElementReturnieren(self, spaltenindex, zeilenindex):
+        #Vor.: Das Bitboard hat eine Höhe von -zeilenindex- Elementen und eine Breite von -spaltenindex- Elementen
+        #Erg.: Das Element mit Spaltenindex -spaltenindex- und Zeilenindex -zeilenindex- ist geliefert.
         x = self.obersterKontrollblock
         for i in range(zeilenindex):
             x = x.naechsterKontrollblock
@@ -143,6 +170,8 @@ class Bitboard:
         return y.inhalt
 
     def __str__(self):
+        #Vor.: -
+        #Erg.: Ein String, der den Inhalt des Bitboardes zweidimensional repräsentiert, ist geliefert.
         erg = ""
         x = self.obersterKontrollblock
         while x != None:
@@ -157,4 +186,6 @@ class Bitboard:
         return erg
 
     def DimensionenReturnieren(self):
+        #Vor.: -
+        #Erg.: Die Dimensionen des Bitboards (Höhe, Breite) sind als 2-elementiger Tuple geliefert.
         return (self.AnzahlSpalten, self.AnzahlZeilen)

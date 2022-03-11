@@ -40,7 +40,7 @@ class Menu():
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 pygame.mixer.Sound.play(click_sound)
                 if Kords[0]>text_spielen_x and Kords[0]<text_spielen_x+200 and Kords[1]>text_spielen_y and Kords[1]<text_spielen_y+75:
-                    G.current_view = ActualGame(5, 5)
+                    G.current_view = Spielrunde(5, 5)
 
                 elif Kords[0]>text_beenden_x and Kords[0]<text_beenden_x+250 and Kords[1]>text_beenden_y and Kords[1]<text_beenden_y+75:
                     pygame.quit()
@@ -85,7 +85,7 @@ class Spielende:
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 if Kords[0]>text_spielen_x and Kords[0]<text_spielen_x+200 and Kords[1]>text_spielen_y and Kords[1]<text_spielen_y+75:
-                    G.current_view = ActualGame(5, 5)
+                    G.current_view = Spielrunde(5, 5)
 
                 elif Kords[0]>text_beenden_x and Kords[0]<text_beenden_x+250 and Kords[1]>text_beenden_y and Kords[1]<text_beenden_y+75:
                     pygame.quit()
@@ -108,9 +108,11 @@ class Spielende:
 
         pygame.display.update()
 
-class ActualGame():
+class Spielrunde():
     def __init__(self, AnzahlSpalten, AnzahlZeilen):
-
+        #Vor.: -AnzahlSpalten-, -AnzahlZeilen- sind Integer
+        #Eff.: Eine neue Objektinstanz der Klasse Spielrunde wird erzeugt. -AnzahlSpalten- mal -AnzahlZeilen- entspricht
+        #      der Anzahl an Verbindungspunkten während der Spielrunde.
         self.current_Spielbrett = mainclasses.Spielbrett(AnzahlSpalten, AnzahlZeilen, 20)
         self.current_Spieler1 = mainclasses.Spieler(1, colors.lime_green)
         self.current_Spieler2 = mainclasses.Spieler(2, colors.dark_red)
@@ -119,6 +121,11 @@ class ActualGame():
         self.indizes_paar_angeklickter_punkte = []
 
     def view(self):
+        #Vor.: -
+        #Eff.: Falls das Fenster geschlossen wird (x), wird das Spiel beendet. Falls ein Punkt angeklickt wird, so wird er der
+        #      stets maximal 2-elementigen Liste indizes_paar_angeklickter_punkte hinzugefügt. Wenn 2 Elemente (Indizes zweier hintereinander angeklickter
+        #      Punkte) in der Liste enthalten sind, so wird, insofern die Punkte horizontal oder vertikal benachbart sind, eine Verbindung zwischen den entsprechenden
+        #      Punkten dem Spielbrett hinzugefügt-
         for event in pygame.event.get():
 
             if event.type == pygame.QUIT:
@@ -135,7 +142,7 @@ class ActualGame():
                     if (horizontaldervertikalbenachbart(self.indizes_paar_angeklickter_punkte)):
                         if not(self.current_Spielbrett.angeklicktePunkteExistierenSchonAlsVerbindung(self.indizes_paar_angeklickter_punkte)):
                             kordsangeklicktezweipunkte = self.current_Spielbrett.KordsAngeklicktePunkteReturnieren(self.indizes_paar_angeklickter_punkte)
-                            gewonnenepunkte = self.current_Spielbrett.VerbindungHinzufuegen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
+                            gewonnenepunkte = self.current_Spielbrett.VerbindungHinzufügen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
 
                             if gewonnenepunkte>0:
                                 self.am_Zug.Punkte += gewonnenepunkte

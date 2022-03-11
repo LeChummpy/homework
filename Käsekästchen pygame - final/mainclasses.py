@@ -5,6 +5,8 @@ from helper import *
 
 class Spielbrett:
     def __init__(self, AnzahlKästchenHo, AnzahlKästchenVer, RadiusPunkte):
+        #Vor.: -AnzahlKästchenHo-, -AnzahlKästchenVer- und -RadiusPunkte- sind Integer
+        #Eff.: Eine neue Objektinstanz der Klasse Spielbrett mit einer Höhe von -AnzahlKästchenVer- Punkten und einer Breite von -AnzahlKästchenHo- Punkten ist erzeugt.
         self.AnzahlKästchenHo = AnzahlKästchenHo
         self.AnzahlKästchenVer = AnzahlKästchenVer
         self.punkte = datastructures.Bitboard(AnzahlKästchenHo, AnzahlKästchenVer)
@@ -15,29 +17,38 @@ class Spielbrett:
             for j in range(1, AnzahlKästchenHo+1):
                 neuerPunkt = None
 
+                #ein Eckpunkt mit der Farbe "helles Orange" wird erzeugt
                 if (i==1 and j==1) or (i==1 and j==AnzahlKästchenHo) or (i==AnzahlKästchenVer and j==1) or (i==AnzahlKästchenVer and j==AnzahlKästchenHo):
-                    neuerPunkt = Eckpunkt((j*100, i*100), RadiusPunkte)
+                    neuerPunkt = Punkt((j*100, i*100), RadiusPunkte, colors.orange_light)
 
+                #ein Seitenpunkt mit der Farbe "Weiß" wird erzeugt
                 elif ( (i==1 and (j!=1 and j!=AnzahlKästchenHo)) or ((i!=1 and i!=AnzahlKästchenVer) and j==1) or (i==AnzahlKästchenVer and (j!=1 and j!=AnzahlKästchenHo)) or ((i!=1 and i!=AnzahlKästchenVer) and j==AnzahlKästchenHo)  ):
-                    neuerPunkt = Seitenpunkt((j*100, i*100), RadiusPunkte)
+                    neuerPunkt = Punkt((j*100, i*100), RadiusPunkte, colors.white )
 
+                #ein Innenpunkt mit der Farbe "Olivgrün" wird erzeugt
                 else:
-                    neuerPunkt = Innenpunkt((j*100, i*100), RadiusPunkte)
+                    neuerPunkt = Punkt((j*100, i*100), RadiusPunkte, colors.lime)
 
                 self.punkte.ElementEinfuegen(j-1,i-1,neuerPunkt)
 
     def IndicesVonAngeklicktemPunktReturnieren(self, x, y):
+        #Vor.: -x- und -y- sind Integer
+        #Erg.: Falls ein Punkt es einen Punkt gibt, der auf den angeklickten Koordinanten liegt, sind
+        #      die Indices des angeklickten Punktes geliefert. Andernfalls ist None geliefert
         dimsPunkteBitboard = self.punkte.DimensionenReturnieren()
         for i in range(dimsPunkteBitboard[0]):
             for j in range(dimsPunkteBitboard[1]):
                 aktuellerPunkt = self.punkte.ElementReturnieren(i, j)
-                KoordinatenAktuellerPunkt = aktuellerPunkt.KoordinatenReturnieren()
+                KoordinatenAktuellerPunkt = aktuellerPunkt.Koordinaten
                 if (x>KoordinatenAktuellerPunkt[0]-aktuellerPunkt.Radius and x<KoordinatenAktuellerPunkt[0]+aktuellerPunkt.Radius and y>KoordinatenAktuellerPunkt[1]-aktuellerPunkt.Radius and y<KoordinatenAktuellerPunkt[1]+aktuellerPunkt.Radius):
                     return (i, j)
 
         return None
 
     def KordsAngeklicktePunkteReturnieren(self, indizes_paar):
+        #Vor.: -indizes_paar- ist ein 2-elementiges Tuple, dessen Elemente 2-elementige Tuples sind. Sie entsprechen
+        #      den Indices zweier Punkte, die i.d.R. eine Verbindung bilden.
+        #Erg.: Die Koordinaten der Punkte, auf die die Punktindizes verweisen, ist geliefert.
         indizes_Punkt1 = indizes_paar[0]
         indizes_Punkt2 = indizes_paar[1]
         return (self.punkte.ElementReturnieren(indizes_Punkt1[0], indizes_Punkt1[1]).Koordinaten, self.punkte.ElementReturnieren(indizes_Punkt2[0], indizes_Punkt2[1]).Koordinaten)
@@ -59,8 +70,10 @@ class Spielbrett:
         return False
 
 
-    def VerbindungHinzufuegen(self, indicesAngeklickteZweiPunkte, kordsindicesAngeklickteZweiPunkte, spielerID, spielerVerbindungsfarbe):
-
+    def VerbindungHinzufügen(self, indicesAngeklickteZweiPunkte, kordsindicesAngeklickteZweiPunkte, spielerID, spielerVerbindungsfarbe):
+        #Vor.: -indicesAngeklickteZweiPunkte- und -kordsindicesAngeklickteZweiPunkte- sind  2-elementige Tuples bestehend aus 2-elementigen Tuples, -spielerID- ist
+        #      ein Integer und -spielerVerbindungsfarbe- ist ein 3-elementiger Tuple (R,G,B)
+        #Erg.: Die Koordinaten der Punkte, auf die die Punktindizes verweisen, ist geliefert.
         v = Verbindung(indicesAngeklickteZweiPunkte[0], indicesAngeklickteZweiPunkte[1], kordsindicesAngeklickteZweiPunkte[0], kordsindicesAngeklickteZweiPunkte[1], spielerID, spielerVerbindungsfarbe)
         self.verbindungen.einreihen(v)
 
@@ -78,7 +91,8 @@ class Spielbrett:
             return 0
 
     def show(self, screen):
-        #show punkte
+        #Vor.:
+        #Eff.: Alle Bestandteile der Spielrunde sind auf dem Bildschirm gezeichnet.
         AnzahlZeilen, AnzahlSpalten = self.punkte.DimensionenReturnieren()
         for i in range(AnzahlZeilen):
             for j in range(AnzahlSpalten):
@@ -120,32 +134,20 @@ class Spielbrett:
             pygame.draw.rect(screen, verbindung.Farbe, (drawingkords_x, drawingkords_y, drawing_width, drawing_heigth), 0)
 
 class Punkt:
+
     def __init__(self, Koordinaten, Radius, Farbe):
+        #Vor.: -Koordinaten- ist ein 2-elementiger Tuple, Farbe ist ein 3-elementiger Tuple (R,G,B) und Radius ist ein Integer
+        #Eff.: Eine neue Objektinstanz der Klasse Punkt mit den Koordinanten -Koordinaten-, dem Radius -Radius- und der Farbe -Farbe- ist erzeugt.
         self.Koordinaten = Koordinaten
         self.Radius = Radius
         self.Farbe = Farbe
 
-    def KoordinatenReturnieren(self):
-        return self.Koordinaten
-
-class Eckpunkt(Punkt):
-    def __init__(self, Koordinaten, Radius):
-        super().__init__(Koordinaten, Radius, colors.orange_light)
-        self.maxVerbindungen = 2
-
-class Seitenpunkt(Punkt):
-    def __init__(self, Koordinaten, Radius):
-        super().__init__(Koordinaten, Radius, colors.lime)
-        self.maxVerbindungen = 3
-
-class Innenpunkt(Punkt):
-    maxVerbindungen = 4
-    def __init__(self, Koordinaten, Radius):
-        super().__init__(Koordinaten, Radius, colors.white)
-        self.maxVerbindungen = 4
-
 class Verbindung:
     def __init__(self, verbundenerPunkt1Indices, verbundenerPunkt2Indices, kordsVerbundenerPunkt1, kordsVerbundenerPunkt2, SpielerID, spielerVerbindungsfarbe):
+        #Vor.: -verbundenerPunkt1Indices-, -verbundenerPunkt1Indices-, -kordsVerbundenerPunkt1- und -kordsVerbundenerPunkt2- sind 2-elementige Tuples, -SpielerID-
+        #      ist ein Integer und spielerVerbindungsfarbe ist ein 3-elementiger Tuple (R,G,B)
+        #Eff.: Eine neue Objektinstanz der Klasse Verbindung vom Punkt mit Index -verbundenerPunkt1Indices- und Koordinanten -kordsVerbundenerPunkt1-
+        #      zum Punkt mit Index -verbundenerPunkt2Indices- und Koordinanten -kordsVerbundenerPunkt2- ist erzeugt.
         self.verbundenerPunkt1Indices = verbundenerPunkt1Indices
         self.verbundenerPunkt2Indices = verbundenerPunkt2Indices
         self.kordsVerbundenerPunkt1 = kordsVerbundenerPunkt1
@@ -154,10 +156,14 @@ class Verbindung:
         self.Farbe = spielerVerbindungsfarbe
 
     def __str__(self):
+        #Vor.: -
+        #Erg.: Ein String, der die Indices der beiden Verbindungspunkte der Verbindung repräsentiert, ist geliefert.
         return ("[ " + str(self.verbundenerPunkt1Indices) + " , " + str(self.verbundenerPunkt2Indices) + " ]")
 
 class Spieler:
     def __init__(self, ID, Verbindungsfarbe):
+        #Vor.: -ID- ist ein Integer und -Verbindungsfarbe- ist ein 3-elementiger Tuple (R,G,B)
+        #Eff.: Eine neue Objektinstanz der Klasse Spieler mit der ID -ID-, der Verbindungsfarbe -Verbindungsfarbe- und zunächst 0 Punkten ist erzeugt.
         self.Punkte = 0
         self.ID = ID
         self.verbindungsfarbe = Verbindungsfarbe
