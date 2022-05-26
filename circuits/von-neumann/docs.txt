@@ -7,10 +7,22 @@
 0100 add -adr/val-  --> Addiere den Wert mit dem Wert im Akku, neuer Wert im Akku gespeichert.
 0101 sub -adr/val-  --> Addiere den Wert vom dem Wert im Akku, neuer Wert im Akku gespeichert.
 0110 cmp -adr/val-  --> Vergleiche den Wert mit dem Akku-Wert.
-0111 jlt -line-     --> Wenn bei cmp Wert kleiner als Akku-Wert, springe an angegebene Befehlszelle.
-1000 jgt -line-     --> Wenn bei cmp Wert größer als Akku-Wert, springe an angegebene Befehlszelle.
-1001 jeq -line-     --> Wenn bei cmp Wert gleich dem Akku-Wert, springe an angegebene Befehlszelle.
-1010 jmp -line-     --> Springe an angegebene Befehlszelle.
-1011 end            --> Beende Programm.
+0111 psh -0-         --> Schiebe den Wert im result-register in den Akku. (Normalerweise immer nach add, sub, cmp)
+
+1000 jlt -line-     --> Wenn bei cmp Wert kleiner als Akku-Wert, springe an angegebene Befehlszelle.
+1001 jgt -line-     --> Wenn bei cmp Wert größer als Akku-Wert, springe an angegebene Befehlszelle.
+1010 jeq -line-     --> Wenn bei cmp Wert gleich dem Akku-Wert, springe an angegebene Befehlszelle.
+1011 jmp -line-     --> Springe an angegebene Befehlszelle.
+1100 end            --> Beende Programm.
 
 v/a: 1/0
+
+-----------Testprogramme------------
+
+#1
+
+0000 1 0100
+0001 0 0010
+0000 1 1000
+0100 0 0010
+0111 0 0000
