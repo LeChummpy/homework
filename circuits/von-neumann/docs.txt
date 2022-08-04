@@ -2,21 +2,21 @@
 
 0000 ld -adr/val-   --> Lade den Wert in den Akku.
 0001 st -adr-       --> Speichere Wert in Akku an der Adresse adr.
-0010 in -adr-       --> Schreibe den Wert des Eingaberegisters an die Adresse adr.
-0011 out -adr/val-  --> Schreibe den Wert ins Ausgaberegister.
-0100 add -adr/val-  --> Addiere den Wert mit dem Wert im Akku, neuer Wert im result register gespeichert.
-0101 sub -adr/val-  --> Addiere den Wert vom dem Wert im Akku, neuer Wert im result register gespeichert.
-0110 cmp -adr/val-  --> Vergleiche den Wert mit dem Akku-Wert, neuer Wert im result register gespeichert.
-0111 psh -0-        --> Schiebe den Wert im result-register in den Akku. (Normalerweise immer nach add, sub, cmp)
-1000 and -adr/val-
-1001 or  -adr/val-
-1010 not -adr/val-
 
-1011 jlt -line-     --> Wenn bei cmp Wert kleiner als Akku-Wert, springe an angegebene Befehlszelle.
-1100 jgt -line-     --> Wenn bei cmp Wert größer als Akku-Wert, springe an angegebene Befehlszelle.
-1101 jeq -line-     --> Wenn bei cmp Wert gleich dem Akku-Wert, springe an angegebene Befehlszelle.
-1110 jmp -line-     --> Springe an angegebene Befehlszelle.
-1111 end            --> Beende Programm.
+00100 add -adr/val-  --> Addiere den Wert mit dem Wert im Akku, neuer Wert im result register gespeichert.
+00101 sub -adr/val-  --> Addiere den Wert vom dem Wert im Akku, neuer Wert im result register gespeichert.
+00110 cmp -adr/val-  --> Vergleiche den Wert mit dem Akku-Wert, neuer Wert im result register gespeichert.
+00111 psh -0-        --> Schiebe den Wert im result-register in den Akku. (Normalerweise immer nach add, sub, cmp)
+01000 and -adr/val-
+01001 or  -adr/val-
+01010 not -adr/val-
+
+01011 jlt -line-     --> Wenn bei cmp Wert kleiner als Akku-Wert, springe an angegebene Befehlszelle.
+01100 jgt -line-     --> Wenn bei cmp Wert größer als Akku-Wert, springe an angegebene Befehlszelle.
+01101 jeq -line-     --> Wenn bei cmp Wert gleich dem Akku-Wert, springe an angegebene Befehlszelle.
+01110 jmp -line-     --> Springe an angegebene Befehlszelle.
+01111 end -0-            --> Beende Programm.
+10000 out -0-   
 
 v/a: 1/0
 
@@ -29,11 +29,25 @@ add 1, 1
 psh
 st 0
 cmp 4
+psh
 jgt 0
+
+end
 
 0000 0 00000000
 0100 1 00000001
 0111 0 00000000
 0001 0 00000000
 0110 1 00000100
+0111 0 00000000
 1100 1 00000000
+0000 0 00000000
+1111 0 00000000
+
+
+
+
+
+---------------------
+
+
