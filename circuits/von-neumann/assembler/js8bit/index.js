@@ -24,15 +24,15 @@ let command_encoding = {
 }
 
 let n_required_arg =  {
-  "ld":2,  // v/a + val/addr 
+  "ld":2,  // v/a + val/addr
   "st":1,  // addr
-  "add":2, // v/a + val/addr 
-  "sub":2, // v/a + val/addr 
-  "cmp":2, // v/a + val/addr  
+  "add":2, // v/a + val/addr
+  "sub":2, // v/a + val/addr
+  "cmp":2, // v/a + val/addr
   "psh":0, //-
-  "and":2, // v/a + val/addr 
-  "or":2,  // v/a + val/addr 
-  "not":2, // v/a + val/addr 
+  "and":2, // v/a + val/addr
+  "or":2,  // v/a + val/addr
+  "not":2, // v/a + val/addr
   "jlt":1, //line
   "jgt":1, //line
   "jeq":1, //line
@@ -47,7 +47,7 @@ fs.readFile(path, 'utf8', (err, file_data) => {
     console.error(err);
     return;
   }
-  
+
 let lines = file_data.split("\r\n")
 let line_counter = 0
 
@@ -55,7 +55,7 @@ for (let l of lines) {
     line_counter++;
     let cmd_buff = Buffer.alloc(1)
     let av_buff = Buffer.alloc(1)
-    
+
     let line_segments = l.split(" ")
     let command = line_segments[0]
     let args = line_segments.slice(1)
@@ -73,7 +73,7 @@ for (let l of lines) {
       } else if (command=="jgt" || command=="jlt" || command=="jeq" || command=="jmp") {
         byte_encoding = byte_encoding + 1;
 
-      } 
+      }
 
       if (n_args==2) {
         actual_val_addr = args[1]
@@ -84,14 +84,14 @@ for (let l of lines) {
         actual_val_addr = 0
 
       }
-      
+
     cmd_buff[0] = byte_encoding;
     av_buff[0] = actual_val_addr;
 
     } else {
       console.warn("Command in line " + line_counter + "requires " + n_args + " but " + args.length + "args were given.")
     }
-    
+
 }
 
 });
