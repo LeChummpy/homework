@@ -1,28 +1,26 @@
 #Operationen
 
-0000 ld -adr/val-   --> Lade den Wert in den Akku.
-0001 st -adr-       --> Speichere Wert in Akku an der Adresse adr.
+00000 0/1 ld -adr/val-   --> Lade den Wert in den Akku.
+00001 0 st -adr-       --> Speichere Wert in Akku an der Adresse adr.
 
-00100 add -adr/val-  --> Addiere den Wert mit dem Wert im Akku, neuer Wert im result register gespeichert.
-00101 sub -adr/val-  --> Addiere den Wert vom dem Wert im Akku, neuer Wert im result register gespeichert.
-00110 cmp -adr/val-  --> Vergleiche den Wert mit dem Akku-Wert, neuer Wert im result register gespeichert.
-00111 psh -0-        --> Schiebe den Wert im result-register in den Akku. (Normalerweise immer nach add, sub, cmp)
-01000 and -adr/val-
-01001 or  -adr/val-
-01010 not -adr/val-
+00100 0/1 add -adr/val-  --> Addiere den Wert mit dem Wert im Akku, neuer Wert im result register gespeichert.
+00101 0/1 sub -adr/val-  --> Addiere den Wert vom dem Wert im Akku, neuer Wert im result register gespeichert.
+00110 0/1 cmp -adr/val-  --> Vergleiche den Wert mit dem Akku-Wert, neuer Wert im result register gespeichert.
+00111 0 psh        --> Schiebe den Wert im result-register in den Akku. (Normalerweise immer nach add, sub, cmp)
+01000 0/1 and -adr/val-
+01001 0/1 or  -adr/val-
+01010 0/1 not -adr/val-
 
-01011 jlt -line-     --> Wenn bei cmp Wert kleiner als Akku-Wert, springe an angegebene Befehlszelle.
-01100 jgt -line-     --> Wenn bei cmp Wert größer als Akku-Wert, springe an angegebene Befehlszelle.
-01101 jeq -line-     --> Wenn bei cmp Wert gleich dem Akku-Wert, springe an angegebene Befehlszelle.
-01110 jmp -line-     --> Springe an angegebene Befehlszelle.
-01111 end -0-            --> Beende Programm.
-10000 out -0-
+01011 1 jlt -line-     --> Wenn bei cmp Wert kleiner als Akku-Wert, springe an angegebene Befehlszelle.
+01100 1 jgt -line-     --> Wenn bei cmp Wert größer als Akku-Wert, springe an angegebene Befehlszelle.
+01101 1 jeq -line-     --> Wenn bei cmp Wert gleich dem Akku-Wert, springe an angegebene Befehlszelle.
+01110 1 jmp -line-     --> Springe an angegebene Befehlszelle.
+01111 0 end -0-            --> Beende Programm.
+10000 0 out -0-
 
 v/a: 1/0
 
 -----------Testprogramme------------
-
-#-1-------------------------
 
 ld 0, 0
 add 1, 1
@@ -35,21 +33,6 @@ jgt 0
 end
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 00000 0 00000000
 01000 1 00000001
 01110 0 00000000
@@ -57,7 +40,6 @@ end
 01100 1 00000100
 01110 0 00000000
 11000 1 00000000
-
 00000 0 00000000
 11110 0 00000000
 

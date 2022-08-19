@@ -4,10 +4,16 @@
 #include <string>
 
 int main (int argc, char*argv[]) {
-  std::ifstream myfile;
-  //myfile.open();
+  std::ifstream assfile_stream;
+  std::string path = argv[0]
+  cout << path;
+  assfile_stream.open(path);
 
-  printf ("adresse: %s", argv[0])
+  if assfile.is_open() {
+    std::string content;
+    assfile_stream >> content;
+
+  }
 
   return 0
 }
