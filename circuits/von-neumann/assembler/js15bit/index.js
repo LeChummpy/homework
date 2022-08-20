@@ -89,7 +89,7 @@ const fs = require("fs");
 let args = process.argv.slice(2)
 let path = args[0]
 let target_path = args[1]
-//let outStream = fs.createWriteStream(target_path)
+let output_buffers = []
 
 fs.readFile(path, 'utf8', (err, file_data) => {
   if (err) {
@@ -102,9 +102,8 @@ let line_counter = 0
 
 for (let l of lines) {
     line_counter++;
-    //let cmd_buff = Buffer.alloc(1)
-    //let av_buff = Buffer.alloc(2)
-    let word_buff = Buffer.alloc(3)
+    let cmd_buff = Buffer.alloc(1)
+    let av_buff = Buffer.alloc(2)
 
     let line_segments = l.split(" ")
     let command = line_segments[0]
@@ -143,13 +142,10 @@ for (let l of lines) {
 
       }
 
-    //cmd_buff.writeUInt8(byte_encoding, 0);
-    //av_buff.writeUInt16BE(actual_val_addr, 0);
-
-    //buff = Buffer.concat([av_buff, cmd_buff])
-
-    word_buff.writeUInt16BE(byte_encoding+actual_val_addr, 0)
-    console.log(word_buff)
+    cmd_buff.writeUInt8(byte_encoding, 0);
+    av_buff.writeUInt16BE(actual_val_addr, 0);
+    buff = Buffer.concat([cmd_buff, av_buff])
+    output_buffers.push(buff)
 
     //console.log(toBin(3).padStart(6, 0))
     //cmd_bin = toBin(byte_encoding).padStart(6, 0)
@@ -162,5 +158,17 @@ for (let l of lines) {
     }
 
 }
+
+
+let out_buffer = Buffer.concat(output_buffers)
+
+
+fs.writeFile(target_path, out_buffer, (err) => {
+
+  if (err) {
+    console.error(err);
+    return; }
+
+});
 
 });
