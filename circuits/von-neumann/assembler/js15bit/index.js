@@ -46,6 +46,21 @@ function toBin(dez) {
 
 }
 
+function cutZerosInTheBeginning(hexString) {
+  let result = [];
+  let a = hexString.split("");
+  let beginningZerosExceeded = false;
+  for (let i of a) {
+    if ( (i!="0" && !beginningZerosExceeded) || beginningZerosExceeded) {
+      result.push(i);
+      beginningZerosExceeded = true;
+    }
+  }
+  return result.join("")
+}
+
+//-------------------------------------------------
+
 let command_encoding = {
     "ld":0,
     "st":2,
@@ -89,6 +104,8 @@ const fs = require("fs");
 let args = process.argv.slice(2)
 let path = args[0]
 let target_path = args[1]
+let writing_mode = args[2]
+
 let output_buffers = []
 
 fs.readFile(path, 'utf8', (err, file_data) => {
@@ -108,6 +125,7 @@ for (let l of lines) {
     let line_segments = l.split(" ")
     let command = line_segments[0]
     let args = line_segments.slice(1)
+
     let n_args = n_required_arg[line_segments[0]]
 
     let byte_encoding = command_encoding[command]
@@ -159,16 +177,34 @@ for (let l of lines) {
 
 }
 
+  if (writing_mode == "logisim") {
 
-let out_buffer = Buffer.concat(output_buffers)
 
 
-fs.writeFile(target_path, out_buffer, (err) => {
 
-  if (err) {
-    console.error(err);
-    return; }
+    let stream = fs.createWriteStream(target_path)
+    stream.once("open", (fd) => {
+      stream.write("v2.0 raw")
+      stream.write(Buffer.from("0a", "hex"))
 
-});
+      for (let i = 0; i<output_buffers.length; i++) {
+        stream.write(cutZerosInTheBeginning(output_buffers[i].toString("hex")));
+        //console.log(cutZerosInTheBeginning(output_buffers[i].toString("hex")))
+        if (!(i+1==output_buffers.length)) {stream.write(" ")}
+      }
 
+      stream.write(Buffer.from("0a", "hex"))
+
+    });
+
+
+  } else {
+
+    let stream = fs.createWriteStream(target_path)
+    stream.once("open", (fd) => {
+      for (let i = 0; i<output_buffers.length; i++) {
+        stream.write(output_buffers[i]);
+      }
+    });
+    }
 });
