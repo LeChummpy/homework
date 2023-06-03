@@ -2,6 +2,7 @@ import datastructures
 import pygame
 import colors
 from helper import *
+import numpy as np
 
 class Spielbrett:
     def __init__(self, AnzahlKästchenHo, AnzahlKästchenVer, RadiusPunkte):
@@ -167,3 +168,16 @@ class Spieler:
         self.Punkte = 0
         self.ID = ID
         self.verbindungsfarbe = Verbindungsfarbe
+
+class SpielerKI(Spieler): #Q-Learning Implementierung
+    def __init__(self):
+        super.__init__()
+
+    def getFeedback(points):
+        pass
+
+    def getState(current_Spielbrett):
+        pass
+        
+    def setNextMove(self):
+        pass
