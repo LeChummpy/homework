@@ -47,6 +47,12 @@ class Menu():
                 elif Kords[0]>text_beenden_x and Kords[0]<text_beenden_x+250 and Kords[1]>text_beenden_y and Kords[1]<text_beenden_y+75:
                     pygame.quit()
 
+                elif Kords[0]>text_trainKI_x and Kords[0]<text_trainKI_x+250 and Kords[1]>text_trainKI_x and Kords[1]<text_trainKI_x+75:
+                    pass
+
+                elif Kords[0]>text_spielegegenKI_x and Kords[0]<text_spielegegenKI_x+250 and Kords[1]>text_spielegegenKI_y and Kords[1]<text_spielegegenKI_y+75:
+                    pass
+
         text_spielen = prettyfont.render("Spielen", True, colors.orange)
         text_beenden = prettyfont.render("Beenden", True, colors.orange)
         text_trainKI = prettyfont.render("Train KI", True, colors.orange)
@@ -265,7 +271,7 @@ class SpielrundeKI():
                 elif (self.current_Spieler2.Punkte>self.current_Spieler1.Punkte):
                     G.current_view = Spielende("Spieler 2", self.current_Spieler2.verbindungsfarbe)
                 else:
-                    G.current_view = Spielende("Unentschiden", colors.white)
+                    G.current_view = Spielende("Unentschieden", colors.white)
 
 
         screen.fill(colors.orange)
