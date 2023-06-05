@@ -211,6 +211,69 @@ class Spielrunde():
         self.current_Spielbrett.show(screen)
         pygame.display.update()
 
+class SpielrundeKItrainieren:
+    def __init__(self, AnzahlSpalten, AnzahlZeilen):
+
+        self.current_Spielbrett = mainclasses.Spielbrett(AnzahlSpalten, AnzahlZeilen, 20)
+        self.current_Spieler1 = mainclasses.SpielerKI(1, colors.lime_green, AnzahlSpalten, AnzahlZeilen)
+        self.current_Spieler2 = mainclasses.SpielerKI(2, colors.dark_red, AnzahlSpalten, AnzahlZeilen)
+        self.am_Zug = self.current_Spieler1
+
+        self.indizes_paar_angeklickter_punkte = []
+
+    def view(self):
+
+        indices = self.amZug.getIndicesOfPointsNextDraw(Spielbrett) #berechne nächsten Zug auf Basis von aktuellem Zustand
+                                                                    #--> Kords dürfen nur hor. o. ver. benachbart sein 
+                                                                    #--> und nicht schon existieren
+        score = self.amZug.evaluate(newSpielbrett, indices)
+        self.amZug.giveFeedback(score)
+
+        kordsangeklicktezweipunkte = self.current_Spielbrett.KordsAngeklicktePunkteReturnieren(self.indizes_paar_angeklickter_punkte)
+        gewonnenepunkte = self.current_Spielbrett.VerbindungHinzufügen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
+
+        if gewonnenepunkte>0:
+            self.am_Zug.Punkte += gewonnenepunkte
+            pygame.mixer.Sound.play(click_sound)
+
+        else:
+
+            if self.am_Zug.ID == self.current_Spieler1.ID:
+                self.am_Zug = self.current_Spieler2
+            elif self.am_Zug.ID == self.current_Spieler2.ID:
+                self.am_Zug = self.current_Spieler1
+
+        self.indizes_paar_angeklickter_punkte = []
+
+        if self.current_Spielbrett.verbindungen.Laenge()==(self.current_Spielbrett.AnzahlKästchenHo-1)*(self.current_Spielbrett.AnzahlKästchenVer) + (self.current_Spielbrett.AnzahlKästchenVer-1)*(self.current_Spielbrett.AnzahlKästchenHo):
+            if (self.current_Spieler1.Punkte>self.current_Spieler2.Punkte):
+                G.current_view = Spielende("Spieler 1", self.current_Spieler1.verbindungsfarbe)
+            elif (self.current_Spieler2.Punkte>self.current_Spieler1.Punkte):
+                G.current_view = Spielende("Spieler 2", self.current_Spieler2.verbindungsfarbe)
+            else:
+                G.current_view = Spielende("Unentschieden", colors.white)
+
+
+        screen.fill(colors.orange)
+
+        text_amzug = None
+        if (self.am_Zug.ID==1):
+            text_amzug = prettyfontsmaller.render("Spieler 1 ist dran!", True, self.am_Zug.verbindungsfarbe)
+        elif (self.am_Zug.ID==2):
+            text_amzug = prettyfontsmaller.render("Spieler 2 ist dran!", True, self.am_Zug.verbindungsfarbe)
+        screen.blit(text_amzug, (600, 200))
+
+        text_Spieler1Punkte = prettyfont.render(str(self.current_Spieler1.Punkte), True, self.current_Spieler1.verbindungsfarbe)
+        text_Spieler2Punkte = prettyfont.render(str(self.current_Spieler2.Punkte), True, self.current_Spieler2.verbindungsfarbe)
+        screen.blit(text_Spieler1Punkte, (640, 75))
+        screen.blit(text_Spieler2Punkte, (740, 75))
+
+        self.current_Spielbrett.show(screen)
+        pygame.display.update()
+
+
+
+
 class SpielrundeKI():
     def __init__(self, AnzahlSpalten, AnzahlZeilen):
         #Vor.: -AnzahlSpalten-, -AnzahlZeilen- sind Integer

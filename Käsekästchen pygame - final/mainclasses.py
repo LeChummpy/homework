@@ -170,14 +170,24 @@ class Spieler:
         self.verbindungsfarbe = Verbindungsfarbe
 
 class SpielerKI(Spieler): #Q-Learning Implementierung
-    def __init__(self):
+    def __init__(self, AnzahlZeilen, AnzahlSpalten):
         super.__init__()
-
-    def getFeedback(points):
-        pass
-
-    def getState(current_Spielbrett):
-        pass
+        sizeInputLayer = AnzahlZeilen*AnzahlSpalten//2
+        sizeHiddenLayer = int(round(sizeInputLayer*1.5, 0))
+        sizeOutputLayer = 4
         
-    def setNextMove(self):
+        w_L1 = np.random.rand(sizeHiddenLayer, sizeInputLayer)
+        w_L2 = np.random.rand(sizeOutputLayer, sizeHiddenLayer)
+
+        x = None
+        a_L2 = None
+        a_L3 = None
+
+    def getIndicesOfPointsNextDraw(Spielbrett):
+        pass
+
+    def evaluate(newSpielbrett, indices):
+        pass
+    
+    def giveFeedback(score):
         pass
