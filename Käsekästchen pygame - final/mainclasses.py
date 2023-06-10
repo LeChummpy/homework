@@ -172,16 +172,16 @@ class Spieler:
 class SpielerKI(Spieler): #Q-Learning Implementierung
     def __init__(self, AnzahlZeilen, AnzahlSpalten):
         super.__init__()
-        sizeInputLayer = AnzahlZeilen*AnzahlSpalten//2
-        sizeHiddenLayer = int(round(sizeInputLayer*1.5, 0))
-        sizeOutputLayer = 4
+        self.sizeInputLayer = AnzahlZeilen*AnzahlSpalten//2
+        self.sizeHiddenLayer = int(round(self.sizeInputLayer*1.5, 0))
+        self.sizeOutputLayer = 4
         
-        w_L1 = np.random.rand(sizeHiddenLayer, sizeInputLayer)
-        w_L2 = np.random.rand(sizeOutputLayer, sizeHiddenLayer)
+        self.w_L1 = np.random.rand(sizeHiddenLayer, sizeInputLayer)
+        self.w_L2 = np.random.rand(sizeOutputLayer, sizeHiddenLayer)
 
-        x = None
-        a_L2 = None
-        a_L3 = None
+        self.x = None
+        self.a_L2 = None
+        self.a_L3 = None
 
     def getIndicesOfPointsNextDraw(Spielbrett):
         pass
@@ -190,4 +190,19 @@ class SpielerKI(Spieler): #Q-Learning Implementierung
         pass
     
     def giveFeedback(score):
-        pass
+        y = None
+        stepsize = -0.01
+        stepsize = stepsize * score
+
+        dL__dw_L2 = np.dot(2*(self.a_L3-y).transpose(), self.a_L2)
+        dL__dw_L1 = 2*(self.a_L3-y).transpose() * self.w_L2 #.....
+
+        w_L1 = w_L1 - stepsize * dL__dw_L1
+        w_L2 = w_L2 - stepsize * dL__dw_L2
+
+    def sigmoid(x):
+        return (1 / (1 + np.exp(-x)) )
+
+    def softmax(x):
+        return np.exp(x) / sum(np.exp(x))
+
