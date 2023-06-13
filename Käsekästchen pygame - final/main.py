@@ -48,7 +48,7 @@ class Menu():
                     pygame.quit()
 
                 elif Kords[0]>text_trainKI_x and Kords[0]<text_trainKI_x+250 and Kords[1]>text_trainKI_x and Kords[1]<text_trainKI_x+75:
-                    pass
+                    G.current_view = SpielrundeKItrainieren(5, 5)
 
                 elif Kords[0]>text_spielegegenKI_x and Kords[0]<text_spielegegenKI_x+250 and Kords[1]>text_spielegegenKI_y and Kords[1]<text_spielegegenKI_y+75:
                     pass
@@ -219,18 +219,22 @@ class SpielrundeKItrainieren:
         self.current_Spieler2 = mainclasses.SpielerKI(2, colors.dark_red, AnzahlSpalten, AnzahlZeilen)
         self.am_Zug = self.current_Spieler1
 
-        self.indizes_paar_angeklickter_punkte = []
-
     def view(self):
 
-        indices = self.amZug.getIndicesOfPointsNextDraw(Spielbrett) #berechne nächsten Zug auf Basis von aktuellem Zustand
-                                                                    #--> Kords dürfen nur hor. o. ver. benachbart sein 
-                                                                    #--> und nicht schon existieren
-        score = self.amZug.evaluate(newSpielbrett, indices)
-        self.amZug.giveFeedback(score)
+        VerbindungenArray = self.current_Spielbrett.verbindungen.asArray
 
-        kordsangeklicktezweipunkte = self.current_Spielbrett.KordsAngeklicktePunkteReturnieren(self.indizes_paar_angeklickter_punkte)
-        gewonnenepunkte = self.current_Spielbrett.VerbindungHinzufügen(self.indizes_paar_angeklickter_punkte, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
+        while True: 
+            indices = self.amZug.getIndicesOfPointsNextDraw(VerbindungenArray) #berechne nächsten Zug auf Basis von aktuellem Zustand
+            score = self.amZug.evaluate(newSpielbrett, indices)
+            self.amZug.giveFeedback(score)
+
+            if score!=-10:
+                break
+            else:
+                print("AI proposed a connection that is not allowed. --> got score of -10 and repeating now...")
+
+        kordsangeklicktezweipunkte = self.current_Spielbrett.KordsAngeklicktePunkteReturnieren(indices)
+        gewonnenepunkte = self.current_Spielbrett.VerbindungHinzufügen(indices, kordsangeklicktezweipunkte, self.am_Zug.ID, self.am_Zug.verbindungsfarbe)
 
         if gewonnenepunkte>0:
             self.am_Zug.Punkte += gewonnenepunkte
@@ -270,9 +274,6 @@ class SpielrundeKItrainieren:
 
         self.current_Spielbrett.show(screen)
         pygame.display.update()
-
-
-
 
 class SpielrundeKI():
     def __init__(self, AnzahlSpalten, AnzahlZeilen):

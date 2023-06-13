@@ -172,24 +172,61 @@ class Spieler:
 class SpielerKI(Spieler): #Q-Learning Implementierung
     def __init__(self, AnzahlZeilen, AnzahlSpalten):
         super.__init__()
-        self.sizeInputLayer = AnzahlZeilen*AnzahlSpalten//2
+        self.AnzahlZeilen = AnzahlZeilen
+        self.AnzahlSpalten = AnzahlSpalten
+
+        self.sizeInputLayer = AnzahlZeilen*AnzahlSpalten
         self.sizeHiddenLayer = int(round(self.sizeInputLayer*1.5, 0))
-        self.sizeOutputLayer = 4
+        self.sizeOutputLayer = 2
         
         self.w_L1 = np.random.rand(sizeHiddenLayer, sizeInputLayer)
         self.w_L2 = np.random.rand(sizeOutputLayer, sizeHiddenLayer)
 
         self.x = None
+        self.z_L2 = None
         self.a_L2 = None
+        self.z_L3 = None
         self.a_L3 = None
 
-    def getIndicesOfPointsNextDraw(Spielbrett):
+    def getIndicesOfPointsNextDraw(VerbindungenArray):
+        def turnNumbersInTwoIndices(numberArray, anzahl_spalten, anzahl_zeilen):
+            pass
+        
+        self.x = VerbindungArrays.flatten()
+        self.z_L2 = np.einsum("i,hi->h", self.x, self.w_L1)
+        self.a_L2 = self.sigmoid(self.z_L2)
+
+        self.z_L3 = np.einsum("i,hi->h", self.x, self.w_L2)
+        self.a_L3 = self.softmax(self.z_L3)
+
+        out = np.copy(self.a_L3)
+        out = out * self.sizeInputLayer
+        numpy.around(out, decimals=0)
+
+        return turnNumbersInTwoIndices(out, self.AnzahlSpalten, self.AnzahlZeilen)
+
+    def evaluate(VerbindungenArray, indices):
+        #1 connection pattern : 0
+        #2 connections pattern : 1
+        #3 connections pattern : 2
+        #4 connections pattern / sqaure : 3
+        #preventing enemy from making square : 4
+
+        #not making 2 connections pattern : -1
+        #not making 3 connections pattern : -2
+        #not making 4 connections pattern / sqaure : -3
+        #not making preventing enemy from making square : -4
+        
+        #things that don't make sense : -10
+        #       -> connection already exists
+        #       -> indices are on the same spot
+        #       -> indices are diagonal
+
         pass
 
-    def evaluate(newSpielbrett, indices):
-        pass
     
     def giveFeedback(score):
+        '''
         y = None
         stepsize = -0.01
         stepsize = stepsize * score
@@ -199,6 +236,7 @@ class SpielerKI(Spieler): #Q-Learning Implementierung
 
         w_L1 = w_L1 - stepsize * dL__dw_L1
         w_L2 = w_L2 - stepsize * dL__dw_L2
+        '''
 
     def sigmoid(x):
         return (1 / (1 + np.exp(-x)) )
