@@ -9,6 +9,7 @@ class Schlange:
         #Eff.: Eine Objektinstanz der Klasse Schlange ist erzeugt. Die Schlange ist zunächst leer.
         self.__laenge = 0
         self.__erster = None
+        self.asInputArray = None
 
     def Laenge(self):
        #Vor.: keine
@@ -54,6 +55,8 @@ class Schlange:
 
         self.__laenge += 1
 
+        self.update_asInputArray()
+
     def letztesRaus(self):
         #Vor.: Mindestens ein Element ist in der Schlange
         #Eff.: Das letzte Element ist aus der Schlange entfernt.
@@ -68,11 +71,15 @@ class Schlange:
             x.naechster = None
             self.__laenge -= 1
 
+        self.update_asInputArray()
+
     def Schlangeverlassen(self):
         #Vor.: Mindestens ein Element ist in der Schlange
         #Eff.: Das erste Element ist aus der Schlange entfernt.
         self.__erster = self.__erster.naechster
         self.__laenge -= 1
+
+        self.update_asInputArray()
 
     def vorziehen(self, n):
         #Vor.: -n- darf nicht 0 sein und darf die Anzahl der Elemente in der Schlange
@@ -89,6 +96,16 @@ class Schlange:
         x_minus_1.naechster = x.naechster
         x.naechster = self.__erster
         self.__erster = x
+
+        self.update_asInputArray()
+
+    def update_asInputArray(self):
+        array = []
+        for i in range(self.__laenge):
+            vschlange = self.ElementReturnieren(i)
+            array.append([vschlange.verbundenerPunkt1Indices, vschlange.verbundenerPunkt2Indices])
+
+        self.asInputArray = np.array(array).flatten()
 
 
     def __str__(self):

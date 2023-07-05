@@ -221,7 +221,7 @@ class SpielrundeKItrainieren:
 
     def view(self):
 
-        VerbindungenArray = self.current_Spielbrett.verbindungen.asArray
+        VerbindungenArray = self.current_Spielbrett.verbindungen.asInputArray
 
         while True: 
             indices = self.amZug.getIndicesOfPointsNextDraw(VerbindungenArray) #berechne nächsten Zug auf Basis von aktuellem Zustand

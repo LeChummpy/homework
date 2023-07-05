@@ -75,6 +75,17 @@ class Spielbrett:
         #Vor.: -indicesAngeklickteZweiPunkte- und -kordsindicesAngeklickteZweiPunkte- sind  2-elementige Tuples bestehend aus 2-elementigen Tuples, -spielerID- ist
         #      ein Integer und -spielerVerbindungsfarbe- ist ein 3-elementiger Tuple (R,G,B)
         #Erg.: Die Koordinaten der Punkte, auf die die Punktindizes verweisen, ist geliefert.
+        indicesErsterAngeklickterPunkt = indicesAngeklickteZweiPunkte[0]
+        indicesZweiterAngeklickterPunkt = indicesAngeklickteZweiPunkte[1]
+        kordsErsterAngeklickterPunkt = kordsindicesAngeklickteZweiPunkte[0]
+        kordsZweiterAngeklickterPunkt = kordsindicesAngeklickteZweiPunkte[1]
+
+        if indicesErsterAngeklickterPunkt[0]>indicesZweiterAngeklickterPunkt[0] or (indicesErsterAngeklickterPunkt[0]==indicesZweiterAngeklickterPunkt[0] and indicesErsterAngeklickterPunkt[1]>indicesZweiterAngeklickterPunkt[1]):
+            #falls der erste Punkt in der Reihenfolge erst nach dem zweiten angeklickten Punkt kommt, dann werden beide Punkte auch im Tuple getauscht.
+            #so ist jede Verbindung eindeutig, was wichtig für das neuronale Netz ist.
+            indicesAngeklickteZweiPunkte = (indicesZweiterAngeklickterPunkt, indicesErsterAngeklickterPunkt)
+            kordsindicesAngeklickteZweiPunkte = (kordsZweiterAngeklickterPunkt, kordsErsterAngeklickterPunkt)
+
         v = Verbindung(indicesAngeklickteZweiPunkte[0], indicesAngeklickteZweiPunkte[1], kordsindicesAngeklickteZweiPunkte[0], kordsindicesAngeklickteZweiPunkte[1], spielerID, spielerVerbindungsfarbe)
         self.verbindungen.einreihen(v)
 
@@ -175,7 +186,7 @@ class SpielerKI(Spieler): #Q-Learning Implementierung
         self.AnzahlZeilen = AnzahlZeilen
         self.AnzahlSpalten = AnzahlSpalten
 
-        self.sizeInputLayer = AnzahlZeilen*AnzahlSpalten
+        self.sizeInputLayer = AnzahlZeilen*AnzahlSpalten*2
         self.sizeHiddenLayer = int(round(self.sizeInputLayer*1.5, 0))
         self.sizeOutputLayer = 2
         
